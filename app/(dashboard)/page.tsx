@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { ArrowRight, CreditCard, Database } from 'lucide-react';
-import { Terminal } from './terminal';
+import { Button } from "@/components/ui/button";
+import { ArrowRight, CreditCard, Database } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -10,13 +9,15 @@ export default function HomePage() {
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
-                Build Your SaaS
-                <span className="block text-orange-500">Faster Than Ever</span>
+                Kenya Land Charge Registration
+                <span className="block text-orange-500">
+                  Secure Your Property Rights
+                </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                Launch your SaaS product in record time with our powerful,
-                ready-to-use template. Packed with modern technologies and
-                essential integrations.
+                Welcome to the official portal for land charge registration in
+                Kenya. Protect your interests and manage your property
+                transactions efficiently.
               </p>
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
                 <a
@@ -24,14 +25,11 @@ export default function HomePage() {
                   target="_blank"
                 >
                   <Button className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-lg px-8 py-4 inline-flex items-center justify-center">
-                    Deploy your own
+                    Start Registration
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </a>
               </div>
-            </div>
-            <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
-              <Terminal />
             </div>
           </div>
         </div>
@@ -51,11 +49,12 @@ export default function HomePage() {
               </div>
               <div className="mt-5">
                 <h2 className="text-lg font-medium text-gray-900">
-                  Next.js and React
+                  What is a Land Charge?
                 </h2>
                 <p className="mt-2 text-base text-gray-500">
-                  Leverage the power of modern web technologies for optimal
-                  performance and developer experience.
+                  A land charge is a legal claim or interest in land that
+                  affects the use or value of the property. It serves as
+                  security for a loan or other obligation related to the land.
                 </p>
               </div>
             </div>
@@ -66,12 +65,14 @@ export default function HomePage() {
               </div>
               <div className="mt-5">
                 <h2 className="text-lg font-medium text-gray-900">
-                  Postgres and Drizzle ORM
+                  Why Register a Land Charge?
                 </h2>
-                <p className="mt-2 text-base text-gray-500">
-                  Robust database solution with an intuitive ORM for efficient
-                  data management and scalability.
-                </p>
+                <ul className="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                  <li>Secure your financial interests in property</li>
+                  <li>Establish legal rights over land</li>
+                  <li>Facilitate property transactions</li>
+                  <li>Comply with Kenyan land laws</li>
+                </ul>
               </div>
             </div>
 
@@ -81,12 +82,14 @@ export default function HomePage() {
               </div>
               <div className="mt-5">
                 <h2 className="text-lg font-medium text-gray-900">
-                  Stripe Integration
+                  Registration Process at a Glance
                 </h2>
-                <p className="mt-2 text-base text-gray-500">
-                  Seamless payment processing and subscription management with
-                  industry-leading Stripe integration.
-                </p>
+                <ol className="max-w-md space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
+                  <li>Fill out the registration form</li>
+                  <li>Submit required documents</li>
+                  <li>Pay registration fees</li>
+                  <li>Receive confirmation</li>
+                </ol>
               </div>
             </div>
           </div>
@@ -98,12 +101,12 @@ export default function HomePage() {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-                Ready to launch your SaaS?
+                Ready to Register your Land?
               </h2>
               <p className="mt-3 max-w-3xl text-lg text-gray-500">
-                Our template provides everything you need to get your SaaS up
-                and running quickly. Don't waste time on boilerplate - focus on
-                what makes your product unique.
+                Our form provides everything you need to get your property
+                secured quickly. Don't waste time on government offices - focus
+                on the security.
               </p>
             </div>
             <div className="mt-8 lg:mt-0 flex justify-center lg:justify-end">
@@ -112,7 +115,7 @@ export default function HomePage() {
                 target="_blank"
               >
                 <Button className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-xl px-12 py-6 inline-flex items-center justify-center">
-                  View the code
+                  Register
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
               </a>

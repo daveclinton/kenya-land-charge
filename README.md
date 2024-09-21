@@ -1,4 +1,4 @@
-# Kenya Land Charge Registration UI
+# Kenya Land Charge Registration
 
 ## Overview
 

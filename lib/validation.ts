@@ -16,13 +16,13 @@ export const formSchema = z.object({
     .string()
     .min(1, { message: "Property description cannot be empty" }),
   principalAmount: z
-    .number({ invalid_type_error: "Please enter a valid number" })
+    .string()
     .min(1, { message: "Principal amount must be greater than 0" }),
   principalAmountWords: z
     .string()
     .min(1, { message: "Principal amount (in words) cannot be empty" }),
   interestRate: z
-    .number({ invalid_type_error: "Please enter a valid number" })
+    .string({ invalid_type_error: "Please enter a valid number" })
     .min(0, { message: "Interest rate cannot be negative" }),
   repaymentDate: z.date({
     required_error: "Repayment date is required",

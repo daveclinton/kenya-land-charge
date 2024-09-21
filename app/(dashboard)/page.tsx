@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpenText, CreditCard, Database } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -25,10 +26,13 @@ export default function HomePage() {
                   href="https://vercel.com/templates/next.js/next-js-saas-starter"
                   target="_blank"
                 >
-                  <Button className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-lg px-8 py-4 inline-flex items-center justify-center">
+                  <Link
+                    href="/registration"
+                    className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-lg px-8 py-4 inline-flex items-center justify-center"
+                  >
                     Start Registration
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
+                  </Link>
                 </a>
               </div>
             </div>

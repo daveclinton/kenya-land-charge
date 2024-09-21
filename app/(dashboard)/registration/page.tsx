@@ -18,27 +18,49 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import SuccessPage from "@/components/success";
 
 type FormSchema = z.infer<typeof formSchema>;
 
 export default function MyFormPage() {
+  const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
   const [step, setStep] = useState(1);
+  const [documents, setDocuments] = useState({
+    titleDeed: null,
+    chargeDocument: null,
+    personalInsurance: null,
+    powerOfAttorney: null,
+    identificationDocument: null,
+  });
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
   });
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files) {
+      setDocuments((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    }
+  };
 
   const onSubmit = (data: FormSchema) => {
     if (step !== 3) {
       setStep(step + 1);
     } else {
       console.log("Form data:", data);
-      // Here you would typically send the data to your backend
-      alert("Form submitted successfully!");
+      console.log("Documents:", documents);
+      setIsSubmissionSuccessful(true);
     }
   };
 
@@ -56,6 +78,10 @@ export default function MyFormPage() {
       setStep(2);
     }
   };
+
+  if (isSubmissionSuccessful) {
+    return <SuccessPage formData={form.getValues()} />;
+  }
 
   return (
     <div className="min-h-screen mt-20 md:mt-0 flex items-center justify-center bg-gray-100 p-4">
@@ -78,14 +104,14 @@ export default function MyFormPage() {
             >
               2
             </div>
-            {/* <div className="w-16 h-1 bg-gray-300"></div>
+            <div className="w-16 h-1 bg-gray-300"></div>
             <div
               className={`w-8 h-8 rounded-full ${
                 step === 3 ? "bg-orange-500 text-white" : "bg-gray-300"
               } flex items-center justify-center`}
             >
               3
-            </div> */}
+            </div>
           </div>
         </div>
 
@@ -325,7 +351,53 @@ export default function MyFormPage() {
                 </Button>
               </>
             )}
-            {/* {step == 3 && <>hello</>} */}
+            {step === 3 && (
+              <div>
+                <h3 className="text-lg font-semibold">Document Uploads</h3>
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle className="text-lg font-bold">
+                    Important
+                  </AlertTitle>
+                  <AlertDescription>
+                    Please upload clear, legible scans or photos of the
+                    following documents:
+                  </AlertDescription>
+                </Alert>
+                <div className="space-y-2 mt-2">
+                  {[
+                    "Title Deed",
+                    "Charge Document",
+                    "Personal Insurance",
+                    "Power of Attorney",
+                    "Identification Document",
+                  ].map((doc) => (
+                    <div key={doc}>
+                      <Label
+                        className="text-md font-semibold py-4"
+                        htmlFor={doc}
+                      >
+                        {doc}
+                      </Label>
+                      <Input
+                        id={doc}
+                        name={doc}
+                        type="file"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full mt-4 bg-orange-500 hover:bg-orange-700 text-white"
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </div>

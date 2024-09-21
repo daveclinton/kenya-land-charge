@@ -1,126 +1,83 @@
-# Next.js SaaS Starter
+# Kenya Land Charge Registration UI
 
-This is a starter template for building a SaaS application using **Next.js** with support for authentication, Stripe integration for payments, and a dashboard for logged-in users.
+## Overview
 
-**Demo: [https://next-saas-start.vercel.app/](https://next-saas-start.vercel.app/)**
-
-<details>
-  <summary>Why did I make this?</summary>
-  
-  In 2020, I made a course called "React 2025" which showed how to build a SaaS application with Next.js, Stripe, and other tools.
-
-Well, it's almost 2025 and React 19 has brought so many amazing new features I didn't predict! This repo is a demonstration of the latest React and Next.js patterns. These patterns can drastically simplify some common tasks in building your SaaS, like building forms, talking to your database, and more.
-
-For example, React now has built in hooks like `useActionState` to handle inline form errors and pending states. React Server Actions can replace a lot of boilerplate code needed to call an API Route from the client-side. And finally, the React `use` hook combined with Next.js makes it incredibly easy to build a powerful `useUser()` hook.
-
-We're able to fetch the user from our Postgres database in the root layout, but _not_ await the `Promise`. Instead, we forward the `Promise` to a React context provider, where we can "unwrap" it and awaited the streamed in data. This means we can have the best of both worlds: easy code to fetch data from our database (e.g. `getUser()`) and a React hook we can use in Client Components (e.g. `useUser()`).
-
-Fun fact: the majority of the UI for this application was built with [v0](https://v0.dev) 🤯 [More details here](https://x.com/leeerob/status/1835777934361084316) if you want to learn about this repo.
-
-</details>
+This document provides an overview of the user interface (UI) for the Kenya Land Charge Registration project. The UI is designed to facilitate the process of registering and managing land charges in Kenya, providing a user-friendly interface for both government officials and citizens.
 
 ## Features
 
-- Marketing landing page (`/`) with animated Terminal element
-- Pricing page (`/pricing`) which connects to Stripe Checkout
-- Dashboard pages with CRUD operations on users/teams
-- Basic RBAC with Owner and Member roles
-- Subscription management with Stripe Customer Portal
-- Email/password authentication with JWTs stored to cookies
-- Global middleware to protect logged-in routes
-- Local middleware to protect Server Actions or validate Zod schemas
-- Activity logging system for any user events
-
-## Tech Stack
-
-- **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Postgres](https://www.postgresql.org/)
-- **ORM**: [Drizzle](https://orm.drizzle.team/)
-- **Payments**: [Stripe](https://stripe.com/)
-- **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
+- User Authentication (In Development)
+- Dashboard (In Development)
+- Land Charge Registration ✅
+- Search and Retrieval (In Development)
+- Document Upload ✅
+- Payment Integration (In Development)
+- Reporting (In Development)
 
 ## Getting Started
 
-```bash
-git clone https://github.com/leerob/next-saas-starter
-cd next-saas-starter
-pnpm install
-```
+### Prerequisites
 
-## Running Locally
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
 
-Use the included setup script to create your `.env` file:
+### Installation
 
-```bash
-pnpm db:setup
-```
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-repo/kenya-land-charge-ui.git
+   ```
 
-Then, run the database migrations and seed the database with a default user and team:
+2. Navigate to the project directory:
+   ```
+   cd kenya-land-charge-ui
+   ```
 
-```bash
-pnpm db:migrate
-pnpm db:seed
-```
+3. Install dependencies:
+   ```
+   npm install
+   ```
 
-This will create the following user and team:
+4. Start the development server:
+   ```
+   npm start
+   ```
 
-- User: `test@test.com`
-- Password: `admin123`
+## Usage
 
-You can, of course, create new users as well through `/sign-up`.
+After starting the development server, open your browser and navigate to `http://localhost:3000` to access the application.
 
-Finally, run the Next.js development server:
+### Key Components
 
-```bash
-pnpm dev
-```
+1. **Login Page**: Users can authenticate using their credentials. (In Development)
+2. **Dashboard**: Provides an overview of recent activities and quick access to main features. (In Development)
+3. **Registration Form**: Allows users to input details for new land charge registrations.
+4. **Search Interface**: Enables users to search for existing land charges using various criteria. (In Development)
+5. **Document Uploader**: Facilitates the upload of necessary documents for land charge registration.
+6. **Payment Gateway**: Integrates with local payment systems for processing fees. (In Development)
+7. **Reports Section**: Generates various reports based on user roles and permissions. (In Development)
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the app in action.
+## Configuration
 
-Optionally, you can listen for Stripe webhooks locally through their CLI to handle subscription change events:
+The application can be configured by modifying the `.env` file in the root directory. Key configuration options include:
 
-```bash
-stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
+- `REACT_APP_API_URL`: The URL of the backend API
+- `REACT_APP_PAYMENT_GATEWAY`: The payment gateway integration key
 
-## Testing Payments
+## Contributing
 
-To test Stripe payments, use the following test card details:
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-- Card Number: `4242 4242 4242 4242`
-- Expiration: Any future date
-- CVC: Any 3-digit number
+## License
 
-## Going to Production
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-When you're ready to deploy your SaaS application to production, follow these steps:
+## Support
 
-### Set up a production Stripe webhook
+For support and queries, please contact the development team at support@kenyalandcharge.go.ke or open an issue in the GitHub repository.
 
-1. Go to the Stripe Dashboard and create a new webhook for your production environment.
-2. Set the endpoint URL to your production API route (e.g., `https://yourdomain.com/api/stripe/webhook`).
-3. Select the events you want to listen for (e.g., `checkout.session.completed`, `customer.subscription.updated`).
+## Acknowledgments
 
-### Deploy to Vercel
-
-1. Push your code to a GitHub repository.
-2. Connect your repository to Vercel and deploy it.
-3. Follow the Vercel deployment process, which will guide you through setting up your project.
-
-### Add environment variables
-
-In your Vercel project settings (or during deployment), add all the necessary environment variables. Make sure to update the values for the production environment, including:
-
-1. `BASE_URL`: Set this to your production domain.
-2. `STRIPE_SECRET_KEY`: Use your Stripe secret key for the production environment.
-3. `STRIPE_WEBHOOK_SECRET`: Use the webhook secret from the production webhook you created in step 1.
-4. `POSTGRES_URL`: Set this to your production database URL.
-5. `AUTH_SECRET`: Set this to a random string. `openssl rand -base64 32` will generate one.
-
-## Other Templates
-
-While this template is intentionally minimal and to be used as a learning resource, there are other paid versions in the community which are more full-featured:
-
-- https://achromatic.dev
-- https://shipfa.st
-- https://makerkit.dev
+- Ministry of Lands and Physical Planning, Kenya
+- National Land Commission, Kenya
+- All contributors and stakeholders in the Kenya Land Charge Registration project

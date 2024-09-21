@@ -1,25 +1,49 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event?.target as Node))
+        setIsMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <nav
+      ref={navRef}
+      className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600"
+    >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        <Link
+          href="/"
+          className="flex items-center space-x-3 rtl:space-x-reverse"
+        >
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             L-Charge
           </span>
-        </a>
+        </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <Button
             type="button"
@@ -59,79 +83,119 @@ function Header() {
           id="navbar-sticky"
         >
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            <Link
-              href="/"
-              className="block py-2 px-3 text-white bg-orange-500 rounded md:bg-transparent md:text-orange-500 md:p-0 md:dark:text-orange-500"
-            >
-              Home
-            </Link>
-            <Link
-              href="#"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              About
-            </Link>
-            <Link
-              href="#"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              Registration
-            </Link>
-            <Link
-              href="#"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              Form
-            </Link>
-            <Link
-              href="#"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              FAQs
-            </Link>
-            <Link
-              href="#"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              Contact
-            </Link>
+            <li>
+              <Link
+                href="/"
+                className={`block py-2 px-3 ${
+                  pathname === "/"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:text-orange-500`}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/about"
+                className={`block py-2 px-3 ${
+                  pathname === "/about"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                About
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/registration"
+                className={`block py-2 px-3 ${
+                  pathname === "/registration"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                Registration
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/form"
+                className={`block py-2 px-3 ${
+                  pathname === "/form"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                Form
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/faqs"
+                className={`block py-2 px-3 ${
+                  pathname === "/faqs"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                FAQs
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/contact"
+                className={`block py-2 px-3 ${
+                  pathname === "/contact"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
   );
 }
+
 function Footer() {
   return (
     <footer className="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023{" "}
-          <a href="https://flowbite.com/" className="hover:underline">
-            Kenya Land Charge Resitration
-          </a>
+          <Link href="/" className="hover:underline">
+            Kenya Land Charge Registration
+          </Link>
           . All Rights Reserved.
         </span>
         <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <Link href="/about" className="hover:underline me-4 md:me-6">
               About
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <Link
+              href="/privacy-policy"
+              className="hover:underline me-4 md:me-6"
+            >
               Privacy Policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <Link href="/licensing" className="hover:underline me-4 md:me-6">
               Licensing
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <Link href="/contact" className="hover:underline">
               Contact
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -143,7 +207,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <section className="flex flex-col min-h-screen">
       <Header />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
     </section>
   );

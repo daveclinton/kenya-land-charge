@@ -461,22 +461,25 @@ export default function MyFormPage() {
                 </Alert>
                 <div className="space-y-2 mt-2">
                   {[
-                    "Title Deed",
-                    "Charge Document",
-                    "Personal Insurance",
-                    "Power of Attorney",
-                    "Identification Document",
+                    { label: "Title Deed", name: "titleDeed" },
+                    { label: "Charge Document", name: "chargeDocument" },
+                    { label: "Personal Insurance", name: "personalInsurance" },
+                    { label: "Power of Attorney", name: "powerOfAttorney" },
+                    {
+                      label: "Identification Document",
+                      name: "identificationDocument",
+                    },
                   ].map((doc) => (
-                    <div key={doc}>
+                    <div key={doc.name}>
                       <Label
                         className="text-md font-semibold py-4"
-                        htmlFor={doc}
+                        htmlFor={doc.name}
                       >
-                        {doc}
+                        {doc.label}
                       </Label>
                       <Input
-                        id={doc}
-                        name={doc}
+                        id={doc.name}
+                        name={doc.name} // Ensure this matches the state keys
                         type="file"
                         onChange={handleFileUpload}
                         accept=".pdf,.jpg,.jpeg,.png"
@@ -485,6 +488,7 @@ export default function MyFormPage() {
                     </div>
                   ))}
                 </div>
+
                 <SubmitButton>Submit</SubmitButton>
               </div>
             )}

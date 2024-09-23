@@ -161,7 +161,7 @@ export default function MyFormPage() {
   const SubmitButton = ({ children }: { children: React.ReactNode }) => (
     <Button
       type="submit"
-      className="w-full bg-sky-500 hover:bg-sky-700 text-white"
+      className="w-full mt-4 bg-sky-500 hover:bg-sky-700 text-white"
       disabled={isLoading}
     >
       {isLoading ? (

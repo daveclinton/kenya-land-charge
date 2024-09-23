@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+const year = new Date().getFullYear();
+
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
@@ -95,18 +97,7 @@ function Header() {
                 Home
               </Link>
             </li>
-            {/* <li>
-              <Link
-                href="/about"
-                className={`block py-2 px-3 ${
-                  pathname === "/about"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-              >
-                About
-              </Link>
-            </li> */}
+
             <li>
               <Link
                 href="/registration"
@@ -117,6 +108,18 @@ function Header() {
                 } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Register
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/about"
+                className={`block py-2 px-3 ${
+                  pathname === "/about"
+                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
+                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+              >
+                About
               </Link>
             </li>
             {/* <li>
@@ -167,9 +170,9 @@ function Footer() {
     <footer className="bg-orange-100 rounded-lg shadow m-4 dark:bg-gray-800">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © 2023{" "}
+          © {year} {` `}
           <Link href="/" className="hover:underline">
-            Kenya Land Charge Registration
+            Kiathagana Financial Management LLC
           </Link>
           . All Rights Reserved.
         </span>

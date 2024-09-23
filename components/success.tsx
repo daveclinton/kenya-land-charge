@@ -11,7 +11,7 @@ type SuccessPageProps = {
 const SuccessPage: React.FC<SuccessPageProps> = ({ formData }) => {
   const router = useRouter();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen mt-20 flex items-center justify-center bg-gray-100 p-4">
       <Card className="w-full max-w-2xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">

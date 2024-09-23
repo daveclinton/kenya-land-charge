@@ -116,7 +116,7 @@ export default function MyFormPage() {
         documents_uploaded: Object.keys(documents)
           .filter((key) => documents[key as DocumentKeys] !== null)
           .join(", "),
-        attachments: base64Documents, // Attach base64-encoded files
+        // attachments: base64Documents, // Attach base64-encoded files
       };
 
       try {

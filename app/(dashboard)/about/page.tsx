@@ -9,7 +9,7 @@ const AboutPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-orange-500 text-white">
+      <div className="bg-sky-500 text-white">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <h1 className="mt-10 text-4xl md:text-5xl font-bold mb-4">
             About Kiathagana Financial Management LLC
@@ -18,7 +18,7 @@ const AboutPage = () => {
             Empowering Small Businesses with Financial Solutions
           </p>
           <a
-            className="bg-white text-orange-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition duration-300"
+            className="bg-white text-sky-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition duration-300"
             href="mailto:mmwaniki2015@gmail.com?cc=mmwaniki2015@gmail.com,mmwaniki2015@gmail.com"
           >
             Get In Touch
@@ -149,7 +149,7 @@ const AboutPage = () => {
         </section>
 
         {/* CTA Section */}
-        <div className="bg-orange-500 text-white rounded-lg shadow-md p-8 text-center">
+        <div className="bg-sky-500 text-white rounded-lg shadow-md p-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
             Ready to Grow Your Business?
           </h2>
@@ -157,7 +157,7 @@ const AboutPage = () => {
             Let's discuss how we can help you achieve your financial goals.
           </p>
           <a
-            className="bg-white text-orange-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition duration-300"
+            className="bg-white text-sky-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition duration-300"
             href="mailto:mmwaniki2015@gmail.com?cc=mmwaniki2015@gmail.com,mmwaniki2015@gmail.com"
           >
             Get In Touch

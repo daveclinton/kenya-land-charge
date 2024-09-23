@@ -12,7 +12,7 @@ export default function HomePage() {
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
                 Kiathagana Financial Management LLC
-                <span className="block text-orange-500">
+                <span className="block text-sky-500">
                   Secure Your Property Rights
                 </span>
               </h1>
@@ -33,7 +33,7 @@ export default function HomePage() {
             </div>
             <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
               <Image
-                src="/land-charge.svg"
+                src="/hero.svg"
                 alt="Description of the SVG"
                 width={500}
                 height={500}
@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-3 lg:gap-8">
             <div>
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-sky-500 text-white">
                 <BookOpenText />
               </div>
               <div className="mt-5">
@@ -63,7 +63,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-10 lg:mt-0">
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-sky-500 text-white">
                 <Database className="h-6 w-6" />
               </div>
               <div className="mt-5">
@@ -80,7 +80,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-10 lg:mt-0">
-              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-sky-500 text-white">
                 <CreditCard className="h-6 w-6" />
               </div>
               <div className="mt-5">

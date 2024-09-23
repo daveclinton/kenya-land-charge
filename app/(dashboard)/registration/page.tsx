@@ -91,7 +91,7 @@ export default function MyFormPage() {
           <div className="flex items-center">
             <div
               className={`w-8 h-8 rounded-full ${
-                step === 1 ? "bg-orange-500 text-white" : "bg-gray-300"
+                step === 1 ? "bg-sky-500 text-white" : "bg-gray-300"
               } flex items-center justify-center`}
             >
               1
@@ -99,7 +99,7 @@ export default function MyFormPage() {
             <div className="w-16 h-1 bg-gray-300"></div>
             <div
               className={`w-8 h-8 rounded-full ${
-                step === 2 ? "bg-orange-500 text-white" : "bg-gray-300"
+                step === 2 ? "bg-sky-500 text-white" : "bg-gray-300"
               } flex items-center justify-center`}
             >
               2
@@ -107,7 +107,7 @@ export default function MyFormPage() {
             <div className="w-16 h-1 bg-gray-300"></div>
             <div
               className={`w-8 h-8 rounded-full ${
-                step === 3 ? "bg-orange-500 text-white" : "bg-gray-300"
+                step === 3 ? "bg-sky-500 text-white" : "bg-gray-300"
               } flex items-center justify-center`}
             >
               3
@@ -228,7 +228,7 @@ export default function MyFormPage() {
                 <Button
                   type="button"
                   onClick={handleNext}
-                  className="w-full bg-orange-500 hover:bg-orange-700 text-white"
+                  className="w-full bg-sky-500 hover:bg-sky-700 text-white"
                 >
                   Submit and Proceed
                 </Button>
@@ -345,7 +345,7 @@ export default function MyFormPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-orange-500 hover:bg-orange-700 text-white"
+                  className="w-full bg-sky-500 hover:bg-sky-700 text-white"
                 >
                   Submit
                 </Button>
@@ -392,7 +392,7 @@ export default function MyFormPage() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full mt-4 bg-orange-500 hover:bg-orange-700 text-white"
+                  className="w-full mt-4 bg-sky-500 hover:bg-sky-700 text-white"
                 >
                   Submit
                 </Button>

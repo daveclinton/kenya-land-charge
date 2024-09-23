@@ -64,7 +64,7 @@ const SuccessPage: React.FC<SuccessPageProps> = ({ formData }) => {
           <div className="mt-8 text-center">
             <Button
               onClick={() => router.replace("/")}
-              className="bg-orange-500 hover:bg-orange-700 text-white"
+              className="bg-sky-500 hover:bg-sky-700 text-white"
             >
               Close
             </Button>

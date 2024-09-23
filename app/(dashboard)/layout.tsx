@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -37,19 +38,20 @@ function Header() {
       className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600"
     >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link
+        <Image src="/k-law.png" height={50} width={50} alt="logo" />
+        {/* <Link
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             L-Charge
           </span>
-        </Link>
+        </Link> */}
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <Link
             href="/registration"
             type="button"
-            className="text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+            className="text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
           >
             Get started
           </Link>
@@ -90,9 +92,9 @@ function Header() {
                 href="/"
                 className={`block py-2 px-3 ${
                   pathname === "/"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:text-orange-500`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:text-sky-500`}
               >
                 Home
               </Link>
@@ -103,9 +105,9 @@ function Header() {
                 href="/registration"
                 className={`block py-2 px-3 ${
                   pathname === "/registration"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Register
               </Link>
@@ -115,9 +117,9 @@ function Header() {
                 href="/about"
                 className={`block py-2 px-3 ${
                   pathname === "/about"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 About
               </Link>
@@ -127,9 +129,9 @@ function Header() {
                 href="/form"
                 className={`block py-2 px-3 ${
                   pathname === "/form"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Form
               </Link>
@@ -139,9 +141,9 @@ function Header() {
                 href="/faqs"
                 className={`block py-2 px-3 ${
                   pathname === "/faqs"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 FAQs
               </Link>
@@ -151,9 +153,9 @@ function Header() {
                 href="/contact"
                 className={`block py-2 px-3 ${
                   pathname === "/contact"
-                    ? "text-white bg-orange-500 md:bg-transparent md:text-orange-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500"
-                } rounded md:p-0 md:dark:hover:text-orange-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
+                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
+                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Contact
               </Link>
@@ -167,7 +169,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="bg-orange-100 rounded-lg shadow m-4 dark:bg-gray-800">
+    <footer className="bg-sky-100 rounded-lg shadow m-4 dark:bg-gray-800">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © {year} {` `}

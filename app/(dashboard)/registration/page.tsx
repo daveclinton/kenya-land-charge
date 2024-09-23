@@ -85,6 +85,21 @@ export default function MyFormPage() {
       console.log("Form data:", data);
       console.log("Documents:", documents);
 
+      // Convert documents to base64 strings
+      const base64Documents = await Promise.all(
+        Object.values(documents).map((file) =>
+          file
+            ? new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file); // Convert file to base64
+              })
+            : null
+        )
+      );
+
+      // Create email data object
       const emailData = {
         to_email: data.email,
         from_name: "Kiathagana Financial Management LLC",
@@ -101,14 +116,16 @@ export default function MyFormPage() {
         documents_uploaded: Object.keys(documents)
           .filter((key) => documents[key as DocumentKeys] !== null)
           .join(", "),
+        attachments: base64Documents, // Attach base64-encoded files
       };
 
       try {
+        // Send email via EmailJS
         const result = await emailjs.send(
-          "service_eaj3nlu",
-          "template_tdhkyp8",
-          emailData,
-          "46krzg3JxLFOt5LBi"
+          "service_eaj3nlu", // Your service ID
+          "template_tdhkyp8", // Your template ID
+          emailData, // Email data with attachments
+          "46krzg3JxLFOt5LBi" // Your public key
         );
 
         console.log("Email sent successfully:", result.text);

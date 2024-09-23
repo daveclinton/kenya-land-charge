@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Kenya Land Charge Registration",
+  title: " Kiathagana LLC",
   description: "Kenya Land Charge Resgistration",
 };
 

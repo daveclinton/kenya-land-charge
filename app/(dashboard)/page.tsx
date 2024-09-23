@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpenText, CreditCard, Database } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { formSchema } from "@/lib/validation";
@@ -27,12 +27,25 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import SuccessPage from "@/components/success";
+import emailjs from "@emailjs/browser";
 
 type FormSchema = z.infer<typeof formSchema>;
+
+type DocumentKeys =
+  | "titleDeed"
+  | "chargeDocument"
+  | "personalInsurance"
+  | "powerOfAttorney"
+  | "identificationDocument";
+
+type Documents = {
+  [K in DocumentKeys]: File | null;
+};
 
 export default function MyFormPage() {
   const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [documents, setDocuments] = useState({
     titleDeed: null,
     chargeDocument: null,
@@ -46,7 +59,7 @@ export default function MyFormPage() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
-    if (files) {
+    if (files && files.length > 0 && isDocumentKey(name)) {
       setDocuments((prevState) => ({
         ...prevState,
         [name]: files[0],
@@ -54,13 +67,58 @@ export default function MyFormPage() {
     }
   };
 
-  const onSubmit = (data: FormSchema) => {
+  const isDocumentKey = (key: string): key is DocumentKeys => {
+    return [
+      "titleDeed",
+      "chargeDocument",
+      "personalInsurance",
+      "powerOfAttorney",
+      "identificationDocument",
+    ].includes(key);
+  };
+
+  const onSubmit = async (data: FormSchema) => {
     if (step !== 3) {
       setStep(step + 1);
     } else {
+      setIsLoading(true);
       console.log("Form data:", data);
       console.log("Documents:", documents);
-      setIsSubmissionSuccessful(true);
+
+      const emailData = {
+        to_email: data.email,
+        from_name: "Kiathagana Financial Management LLC",
+        to_name: data.fullName,
+        full_name: data.fullName,
+        email: data.email,
+        address: data.address,
+        title_number: data.titleNumber,
+        property_description: data.propertyDescription,
+        principal_amount: data.principalAmount,
+        principal_amount_words: data.principalAmountWords,
+        interest_rate: data.interestRate,
+        repayment_date: format(data.repaymentDate, "PPP"),
+        documents_uploaded: Object.keys(documents)
+          .filter((key) => documents[key as DocumentKeys] !== null)
+          .join(", "),
+      };
+
+      try {
+        const result = await emailjs.send(
+          "service_eaj3nlu",
+          "template_tdhkyp8",
+          emailData,
+          "46krzg3JxLFOt5LBi"
+        );
+
+        console.log("Email sent successfully:", result.text);
+        setIsSubmissionSuccessful(true);
+      } catch (error) {
+        console.error("Failed to send email", error);
+        // Handle error (e.g., show an error message to the user)
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -82,6 +140,23 @@ export default function MyFormPage() {
   if (isSubmissionSuccessful) {
     return <SuccessPage formData={form.getValues()} />;
   }
+
+  const SubmitButton = ({ children }: { children: React.ReactNode }) => (
+    <Button
+      type="submit"
+      className="w-full bg-sky-500 hover:bg-sky-700 text-white"
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Submitting...
+        </>
+      ) : (
+        children
+      )}
+    </Button>
+  );
 
   return (
     <div className="min-h-screen mt-20 md:mt-0 flex items-center justify-center bg-gray-100 p-4">
@@ -229,8 +304,16 @@ export default function MyFormPage() {
                   type="button"
                   onClick={handleNext}
                   className="w-full bg-sky-500 hover:bg-sky-700 text-white"
+                  disabled={isLoading}
                 >
-                  Submit and Proceed
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Submit and Proceed"
+                  )}
                 </Button>
               </>
             )}
@@ -343,12 +426,7 @@ export default function MyFormPage() {
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-sky-500 hover:bg-sky-700 text-white"
-                >
-                  Submit
-                </Button>
+                <SubmitButton>Submit</SubmitButton>
               </>
             )}
             {step === 3 && (
@@ -390,12 +468,7 @@ export default function MyFormPage() {
                     </div>
                   ))}
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full mt-4 bg-sky-500 hover:bg-sky-700 text-white"
-                >
-                  Submit
-                </Button>
+                <SubmitButton>Submit</SubmitButton>
               </div>
             )}
           </form>

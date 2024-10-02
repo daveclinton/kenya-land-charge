@@ -6,21 +6,19 @@ import { db } from "../db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
-
-const initialState = {
-  message: null,
-  errors: {},
-};
+import { ActionResult } from "next/dist/server/app-render/types";
 
 export async function createUser(
-  prevState: typeof initialState,
+  prevState: ActionResult,
   formData: FormData
-) {
+): Promise<ActionResult> {
   const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     name: formData.get("name"),
   });
+
+  console.log(validatedFields);
 
   if (!validatedFields.success) {
     return {
@@ -41,6 +39,7 @@ export async function createUser(
     revalidatePath("/sign-up");
     redirect("/login");
   } catch (error) {
+    console.log("Definitive error", error);
     return {
       errors: {},
       message: "Database Error: Failed to create user",

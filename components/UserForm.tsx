@@ -15,13 +15,9 @@ const SubmitButton = () => {
   );
 };
 
-const initialState = {
-  message: null,
-  errors: {} as any,
-};
-
 const UserForm = () => {
-  const [state, formAction] = useFormState(createUser as any, initialState);
+  const [state, formAction] = useFormState(createUser, {});
+  console.log("state", state);
   return (
     <form action={formAction} className="space-y-4">
       <div>

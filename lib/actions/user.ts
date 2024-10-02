@@ -7,20 +7,29 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
 
-export async function createUser(formData: FormData) {
-  const valiatedFields = UserSchema.safeParse({
+const initialState = {
+  message: null,
+  errors: {},
+};
+
+export async function createUser(
+  prevState: typeof initialState,
+  formData: FormData
+) {
+  const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     name: formData.get("name"),
   });
 
-  if (!valiatedFields.success) {
+  if (!validatedFields.success) {
     return {
-      errors: valiatedFields.error.flatten().fieldErrors,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: null,
     };
   }
 
-  const { email, password, name } = valiatedFields.data;
+  const { email, password, name } = validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
@@ -33,6 +42,7 @@ export async function createUser(formData: FormData) {
     redirect("/login");
   } catch (error) {
     return {
+      errors: {},
       message: "Database Error: Failed to create user",
     };
   }

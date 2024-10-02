@@ -1,18 +1,6 @@
 "use client";
 import { createUser } from "@/lib/actions/user";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
-
-interface FormErrors {
-  email?: string[];
-  password?: string[];
-  name?: string[];
-}
-
-interface FormState {
-  message: string | null;
-  errors: FormErrors;
-}
+import { useFormState, useFormStatus } from "react-dom";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -27,22 +15,13 @@ const SubmitButton = () => {
   );
 };
 
-const initialState: FormState = {
+const initialState = {
   message: null,
   errors: {},
 };
 
 const UserForm = () => {
-  type ActionFunction = (formData: FormData) => Promise<{
-    errors?: {
-      email?: string[];
-      password?: string[];
-      name?: string[];
-    };
-    message?: string;
-  }>;
-
-  const [state, formAction] = useActionState(createUser as any, initialState);
+  const [state, formAction] = useFormState(createUser as any, initialState);
   return (
     <form action={formAction} className="space-y-4">
       <div>

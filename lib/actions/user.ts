@@ -12,15 +12,22 @@ export async function createUser(
   prevState: ActionResult,
   formData: FormData
 ): Promise<ActionResult> {
+  // Log the initial form data
+  console.log("Form Data:", Array.from(formData.entries()));
+
   const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     name: formData.get("name"),
   });
 
-  console.log(validatedFields);
+  console.log("Validation Result:", validatedFields);
 
   if (!validatedFields.success) {
+    console.error(
+      "Validation Errors:",
+      validatedFields.error.flatten().fieldErrors
+    );
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: null,
@@ -30,16 +37,19 @@ export async function createUser(
   const { email, password, name } = validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  console.log("Hashed Password:", hashedPassword);
+
   try {
-    await db.insert(users).values({
+    const result = await db.insert(users).values({
       email,
       password: hashedPassword,
       name,
     });
+    console.log("User Creation Result:", result); // Log the result of the insertion
     revalidatePath("/sign-up");
     redirect("/login");
   } catch (error) {
-    console.log("Definitive error", error);
+    console.error("Database Error:", error); // Log the actual error message
     return {
       errors: {},
       message: "Database Error: Failed to create user",

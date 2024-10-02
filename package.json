@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "node -r esbuild-register drizzle/migrate.ts"
+    "db:drop":"drizzle-kit drop",
+    "db:migrate": "tsx drizzle/migrate.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

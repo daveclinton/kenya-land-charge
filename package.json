@@ -2,13 +2,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
+    "build": "npm run db:migrate && next build",
     "start": "next start",
-    "db:setup": "npx tsx lib/db/setup.ts",
-    "db:seed": "npx tsx lib/db/seed.ts",
+    "lint": "next lint",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "npx tsx lib/db/migrate.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:migrate": "node -r esbuild-register drizzle/migrate.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

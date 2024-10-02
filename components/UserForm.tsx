@@ -1,3 +1,4 @@
+"use client";
 import { createUser } from "@/lib/actions/user";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";

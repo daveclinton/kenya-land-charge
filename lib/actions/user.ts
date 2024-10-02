@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { db } from "../db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getSession } from "../session";
 
 export async function createUser(formData: FormData) {
   const valiatedFields = UserSchema.safeParse({
@@ -35,4 +36,24 @@ export async function createUser(formData: FormData) {
       message: "Database Error: Failed to create user",
     };
   }
+}
+
+export async function Login(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.email, email),
+  });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return {
+      message: "Invalid email or password",
+    };
+  }
+
+  const session = await getSession();
+  session.userId = user.id;
+  session.isLoggedIn = true;
+  await session.save();
+  redirect("dashboard");
 }

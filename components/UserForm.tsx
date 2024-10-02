@@ -17,7 +17,7 @@ const SubmitButton = () => {
 
 const initialState = {
   message: null,
-  errors: {},
+  errors: {} as any,
 };
 
 const UserForm = () => {

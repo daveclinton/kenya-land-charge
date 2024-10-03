@@ -58,19 +58,19 @@ export async function createUser(
       password: hashedPassword,
       name,
     });
-    console.log("User Creation Result:", result); // Log the result of the insertion
-    revalidatePath("/sign-up");
-    redirect("/login");
+    console.log("User Creation Result:", result);
+    revalidatePath("/signup");
   } catch (error) {
-    console.error("Database Error:", error); // Log the actual error message
+    console.error("Database Error:", error);
     return {
       errors: {},
       message: "Database Error: Failed to create user",
     };
   }
+  redirect("/login");
 }
 
-export async function Login(formData: FormData) {
+export async function Login(prevState: ActionResult, formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const user = await db.query.users.findFirst({
@@ -87,5 +87,5 @@ export async function Login(formData: FormData) {
   session.userId = user.id;
   session.isLoggedIn = true;
   await session.save();
-  redirect("dashboard");
+  redirect("/dashboard");
 }

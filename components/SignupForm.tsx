@@ -15,7 +15,7 @@ const SubmitButton = () => {
   );
 };
 
-const UserForm = () => {
+const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
   console.log("state", state);
   return (
@@ -77,4 +77,4 @@ const UserForm = () => {
   );
 };
 
-export default UserForm;
+export default SignUpForm;

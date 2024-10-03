@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
 import { ActionResult } from "next/dist/server/app-render/types";
+import { eq } from "drizzle-orm";
 
 export async function createUser(
   prevState: ActionResult,
@@ -40,6 +41,18 @@ export async function createUser(
   console.log("Hashed Password:", hashedPassword);
 
   try {
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      return {
+        errors: { email: ["User with email already exists"] },
+        message: null,
+      };
+    }
     const result = await db.insert(users).values({
       email,
       password: hashedPassword,

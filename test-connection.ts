@@ -3,6 +3,7 @@ dotenv.config(); // Load environment variables
 
 import postgres from "postgres";
 
+// Retrieve the connection string from environment variables
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
@@ -10,7 +11,15 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const sql = postgres(connectionString);
+// Define SSL configuration
+const sslConfig = {
+  rejectUnauthorized: true,
+};
+
+// Initialize the postgres client with SSL
+const sql = postgres(connectionString, {
+  ssl: sslConfig,
+});
 
 const testConnection = async () => {
   try {

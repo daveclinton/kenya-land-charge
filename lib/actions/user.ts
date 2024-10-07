@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
 import { ActionResult } from "next/dist/server/app-render/types";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 export async function createUser(
   prevState: ActionResult,
@@ -19,9 +19,9 @@ export async function createUser(
   const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
-    full_name: formData.get("full_name"),
-    phone_number: formData.get("phone_number"),
-    date_of_birth: formData.get("date_of_birth"),
+    fullName: formData.get("full_name"),
+    phoneNumber: formData.get("phone_number"),
+    dateOfBirth: formData.get("date_of_birth"),
   });
 
   console.log("Validation Result:", validatedFields);
@@ -37,7 +37,7 @@ export async function createUser(
     };
   }
 
-  const { email, password, full_name, phone_number, date_of_birth } =
+  const { email, password, fullName, phoneNumber, dateOfBirth } =
     validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -47,21 +47,25 @@ export async function createUser(
     const existingUser = await db
       .select()
       .from(users)
-      .where(eq(users.email, email))
+      .where(or(eq(users.email, email), eq(users.phoneNumber, phoneNumber)))
       .limit(1);
 
     if (existingUser.length > 0) {
+      const existingField =
+        existingUser[0].email === email ? "email" : "phone number";
       return {
-        errors: { email: ["User with email already exists"] },
+        errors: {
+          [existingField]: [`User with this ${existingField} already exists`],
+        },
         message: null,
       };
     }
     const result = await db.insert(users).values({
       email,
       password: hashedPassword,
-      full_name,
-      phone_number,
-      date_of_birth,
+      fullName,
+      phoneNumber,
+      dateOfBirth: dateOfBirth.toISOString().split("T")[0],
     });
     console.log("User Creation Result:", result);
     revalidatePath("/signup");

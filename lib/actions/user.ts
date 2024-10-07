@@ -21,7 +21,7 @@ export async function createUser(
     password: formData.get("password"),
     full_name: formData.get("full_name"),
     phone_number: formData.get("phone_number"),
-    date_of_birth: formData.get("phone_number"),
+    date_of_birth: formData.get("date_of_birth"),
   });
 
   console.log("Validation Result:", validatedFields);

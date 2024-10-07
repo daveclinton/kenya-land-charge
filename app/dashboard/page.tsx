@@ -14,7 +14,7 @@ export default async function Dashboard() {
     <main>
       <ClientInitializer userData={user} />
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      <p>Welcome, {user.name}!</p>
+      <p>Welcome, {user.fullName}!</p>
     </main>
   );
 }

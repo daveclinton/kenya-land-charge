@@ -1,5 +1,5 @@
 {
-  "id": "e33ed951-0f4c-41e0-93e1-a330ef6d0041",
+  "id": "4004e41c-e097-4ef8-9255-221b48aeea2e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -26,9 +26,22 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "full_name": {
+          "name": "full_name",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Fearful'"
+        },
+        "date_of_birth": {
+          "name": "date_of_birth",
+          "type": "date",
           "primaryKey": false,
           "notNull": true
         },
@@ -56,6 +69,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "password"
+          ]
+        },
+        "users_phone_number_unique": {
+          "name": "users_phone_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number"
           ]
         }
       }

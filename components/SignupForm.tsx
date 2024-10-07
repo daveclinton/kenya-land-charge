@@ -62,13 +62,13 @@ const SignUpForm = () => {
         </label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="full_name"
+          name="full_name"
           required
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         />
-        {state.errors?.name && (
-          <p className="text-red-500 text-sm mt-1">{state.errors.name}</p>
+        {state.errors?.full_name && (
+          <p className="text-red-500 text-sm mt-1">{state.errors.full_name}</p>
         )}
       </div>
       <SubmitButton />

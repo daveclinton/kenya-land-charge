@@ -38,10 +38,6 @@ type DocumentKeys =
   | "powerOfAttorney"
   | "identificationDocument";
 
-type Documents = {
-  [K in DocumentKeys]: File | null;
-};
-
 export default function MyFormPage() {
   const [isSubmissionSuccessful, setIsSubmissionSuccessful] = useState(false);
   const [step, setStep] = useState(1);

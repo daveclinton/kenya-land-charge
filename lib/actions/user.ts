@@ -19,7 +19,9 @@ export async function createUser(
   const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
-    name: formData.get("name"),
+    full_name: formData.get("full_name"),
+    phone_number: formData.get("phone_number"),
+    date_of_birth: formData.get("phone_number"),
   });
 
   console.log("Validation Result:", validatedFields);
@@ -35,7 +37,8 @@ export async function createUser(
     };
   }
 
-  const { email, password, name } = validatedFields.data;
+  const { email, password, full_name, phone_number, date_of_birth } =
+    validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log("Hashed Password:", hashedPassword);
@@ -56,7 +59,9 @@ export async function createUser(
     const result = await db.insert(users).values({
       email,
       password: hashedPassword,
-      name,
+      full_name,
+      phone_number,
+      date_of_birth,
     });
     console.log("User Creation Result:", result);
     revalidatePath("/signup");

@@ -20,13 +20,7 @@ export const users = pgTable("users", {
 
 export const UserSchema = z.object({
   email: z.string().email(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one uppercase letter"
-    ),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
   fullName: z
     .string()
     .min(2, { message: "Full name must be at least 2 characters long." })
@@ -36,7 +30,7 @@ export const UserSchema = z.object({
       message:
         "Full name can only contain letters, spaces, apostrophes, and hyphens.",
     }),
-  phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+  phoneNumber: z.string(),
   dateOfBirth: z
     .string()
     .refine((date) => {

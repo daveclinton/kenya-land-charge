@@ -19,9 +19,9 @@ export async function createUser(
   const validatedFields = UserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
-    fullName: formData.get("full_name"),
-    phoneNumber: formData.get("phone_number"),
-    dateOfBirth: formData.get("date_of_birth"),
+    fullName: formData.get("fullName"),
+    phoneNumber: formData.get("phoneNumber"),
+    dateOfBirth: formData.get("dateOfBirth"),
   });
 
   console.log("Validation Result:", validatedFields);

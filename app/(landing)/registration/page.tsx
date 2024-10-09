@@ -12,6 +12,9 @@ import Step1Form from "./_components/Step1Form";
 import Step2Form from "./_components/Step2Form";
 import Step3Form from "./_components/Step3Form";
 import { format } from "date-fns";
+import { uploadToS3 } from "@/utils/s3";
+import { formSumissions } from "@/lib/db/schema";
+import { db } from "@/lib/db";
 
 export type FormSchema = z.infer<typeof formSchema>;
 
@@ -33,7 +36,7 @@ export default function MyFormPage() {
     powerOfAttorney: null,
     identificationDocument: null,
   });
-  const form = useForm<FormSchema>({
+  const form = useForm<any>({
     resolver: zodResolver(formSchema),
   });
 
@@ -57,13 +60,39 @@ export default function MyFormPage() {
     ].includes(key);
   };
 
-  const onSubmit = async (data: FormSchema) => {
+  const onSubmit = async (data: any) => {
     if (step !== 3) {
       setStep(step + 1);
     } else {
       setIsLoading(true);
-      console.log("Form data:", data);
-      console.log("Documents:", documents);
+    }
+    try {
+      const documentUrls: Partial<Record<DocumentKeys, string>> = {};
+      for (const [key, file] of Object.entries(documents)) {
+        if (file && isDocumentKey(key)) {
+          const url = await uploadToS3(
+            file,
+            `${data.fullName}/${key}-${Date.now()}`
+          );
+          documentUrls[key] = url;
+        }
+      }
+      await db.insert(formSumissions).values({
+        fullName: data.fullName,
+        email: data.email,
+        address: data.address,
+        titleNumber: data.titleNumber,
+        propertyDescription: data.propertyDescription,
+        principalAmount: data.principalAmount,
+        principalAmountWords: data.principalAmountWords,
+        interestRate: data.interestRate,
+        repaymentDate: data.repaymentDate,
+        titleDeedUrl: documentUrls.titleDeed,
+        chargeDocumentUrl: documentUrls.chargeDocument,
+        personalInsuranceUrl: documentUrls.personalInsurance,
+        powerOfAttorneyUrl: documentUrls.powerOfAttorney,
+        identificationDocumentUrl: documentUrls.identificationDocument,
+      });
       const emailData = {
         to_email: data.email,
         from_name: "Kiathagana Financial Management LLC",
@@ -77,27 +106,22 @@ export default function MyFormPage() {
         principal_amount_words: data.principalAmountWords,
         interest_rate: data.interestRate,
         repayment_date: format(data.repaymentDate, "PPP"),
-        documents_uploaded: Object.keys(documents)
-          .filter((key) => documents[key as DocumentKeys] !== null)
-          .join(", "),
+        documents_uploaded: Object.keys(documentUrls).join(", "),
       };
 
-      // Email sending logic...
-      try {
-        const result = await emailjs.send(
-          "service_eaj3nlu",
-          "template_tdhkyp8",
-          emailData,
-          "46krzg3JxLFOt5LBi"
-        );
+      const result = await emailjs.send(
+        "service_eaj3nlu",
+        "template_tdhkyp8",
+        emailData,
+        "46krzg3JxLFOt5LBi"
+      );
 
-        console.log("Email sent successfully:", result.text);
-        setIsSubmissionSuccessful(true);
-      } catch (error) {
-        console.error("Failed to send email", error);
-      } finally {
-        setIsLoading(false);
-      }
+      console.log("Email sent successfully:", result.text);
+      setIsSubmissionSuccessful(true);
+    } catch (error) {
+      console.error("Failed to process submission", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

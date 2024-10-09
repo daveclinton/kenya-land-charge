@@ -6,15 +6,13 @@ import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import SuccessPage from "@/components/success";
-import emailjs from "@emailjs/browser";
 import Stepper from "./_components/Stepper";
 import Step1Form from "./_components/Step1Form";
 import Step2Form from "./_components/Step2Form";
 import Step3Form from "./_components/Step3Form";
 import { format } from "date-fns";
 import { uploadToS3 } from "@/utils/s3";
-import { formSumissions } from "@/lib/db/schema";
-import { db } from "@/lib/db";
+import { createFormSubmission } from "@/lib/actions/user";
 
 export type FormSchema = z.infer<typeof formSchema>;
 
@@ -36,8 +34,9 @@ export default function MyFormPage() {
     powerOfAttorney: null,
     identificationDocument: null,
   });
-  const form = useForm<any>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
   });
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,23 +49,16 @@ export default function MyFormPage() {
     }
   };
 
-  const isDocumentKey = (key: string): key is DocumentKeys => {
-    return [
-      "titleDeed",
-      "chargeDocument",
-      "personalInsurance",
-      "powerOfAttorney",
-      "identificationDocument",
-    ].includes(key);
-  };
-
-  const onSubmit = async (data: any) => {
-    if (step !== 3) {
+  const onSubmit = async (data: FormSchema) => {
+    console.log("Here", data);
+    if (step < 3) {
       setStep(step + 1);
-    } else {
-      setIsLoading(true);
+      return;
     }
+
+    setIsLoading(true);
     try {
+      // Handle file uploads
       const documentUrls: Partial<Record<DocumentKeys, string>> = {};
       for (const [key, file] of Object.entries(documents)) {
         if (file && isDocumentKey(key)) {
@@ -77,66 +69,82 @@ export default function MyFormPage() {
           documentUrls[key] = url;
         }
       }
-      await db.insert(formSumissions).values({
-        fullName: data.fullName,
-        email: data.email,
-        address: data.address,
-        titleNumber: data.titleNumber,
-        propertyDescription: data.propertyDescription,
-        principalAmount: data.principalAmount,
-        principalAmountWords: data.principalAmountWords,
-        interestRate: data.interestRate,
-        repaymentDate: data.repaymentDate,
-        titleDeedUrl: documentUrls.titleDeed,
-        chargeDocumentUrl: documentUrls.chargeDocument,
-        personalInsuranceUrl: documentUrls.personalInsurance,
-        powerOfAttorneyUrl: documentUrls.powerOfAttorney,
-        identificationDocumentUrl: documentUrls.identificationDocument,
-      });
+
+      // Call server action to save form submission
+      const submissionResult = await createFormSubmission(data, documentUrls);
+
+      if (!submissionResult.success) {
+        throw new Error(
+          submissionResult.error || "Failed to save form submission"
+        );
+      }
+
+      // Prepare and send confirmation email
       const emailData = {
-        to_email: data.email,
-        from_name: "Kiathagana Financial Management LLC",
-        to_name: data.fullName,
-        full_name: data.fullName,
-        email: data.email,
-        address: data.address,
-        title_number: data.titleNumber,
-        property_description: data.propertyDescription,
-        principal_amount: data.principalAmount,
-        principal_amount_words: data.principalAmountWords,
-        interest_rate: data.interestRate,
-        repayment_date: format(data.repaymentDate, "PPP"),
-        documents_uploaded: Object.keys(documentUrls).join(", "),
+        to: data.email,
+        from: "no-reply@kiathagana.com",
+        subject: "Form Submission Confirmation",
+        html: `
+        <h1>Thank you for your submission, ${data.fullName}!</h1>
+        <p>We have received your form with the following details:</p>
+        <ul>
+          <li>Full Name: ${data.fullName}</li>
+          <li>Email: ${data.email}</li>
+          <li>Address: ${data.address}</li>
+          <li>Title Number: ${data.titleNumber}</li>
+          <li>Property Description: ${data.propertyDescription}</li>
+          <li>Principal Amount: ${data.principalAmount}</li>
+          <li>Principal Amount in Words: ${data.principalAmountWords}</li>
+          <li>Interest Rate: ${data.interestRate}%</li>
+          <li>Repayment Date: ${format(data.repaymentDate, "PPP")}</li>
+          <li>Documents Uploaded: ${Object.keys(documentUrls).join(", ")}</li>
+        </ul>
+        <p>We will process your submission and get back to you soon.</p>
+      `,
       };
 
-      const result = await emailjs.send(
-        "service_eaj3nlu",
-        "template_tdhkyp8",
-        emailData,
-        "46krzg3JxLFOt5LBi"
-      );
+      const emailResponse = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
 
-      console.log("Email sent successfully:", result.text);
+      if (!emailResponse.ok) {
+        throw new Error("Failed to send confirmation email");
+      }
+
+      console.log("Form submitted and email sent successfully");
       setIsSubmissionSuccessful(true);
     } catch (error) {
-      console.error("Failed to process submission", error);
+      console.error("Failed to process submission:", error);
+      // Add user feedback about the error (e.g., toast notification)
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleNext = () => {
-    form.trigger([
-      "fullName",
-      "email",
-      "address",
-      "titleNumber",
-      "propertyDescription",
-    ]);
-    const { fullName, email, address, titleNumber, propertyDescription } =
-      form.getValues();
-    if (fullName && email && address && titleNumber && propertyDescription) {
-      setStep(2);
+  // Helper function to type-check document keys
+  const isDocumentKey = (key: string): key is DocumentKeys => {
+    return [
+      "titleDeed",
+      "chargeDocument",
+      "personalInsurance",
+      "powerOfAttorney",
+      "identificationDocument",
+    ].includes(key);
+  };
+  const handleNext = async () => {
+    const isValid = await form.trigger();
+    console.log("Is Form Valid:", isValid);
+    console.log("Current Step:", step);
+    if (!isValid) {
+      console.log("Validation Errors:", form.formState.errors);
+    }
+
+    if (isValid) {
+      setStep((prevStep) => prevStep + 1);
     }
   };
 
@@ -152,7 +160,7 @@ export default function MyFormPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {step === 1 && <Step1Form form={form} onNext={handleNext} />}
-            {step === 2 && <Step2Form form={form} isLoading={isLoading} />}
+            {step === 2 && <Step2Form form={form} onNext={handleNext} />}
             {step === 3 && (
               <Step3Form
                 handleFileUpload={handleFileUpload}

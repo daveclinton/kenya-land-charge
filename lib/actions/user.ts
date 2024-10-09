@@ -1,6 +1,6 @@
 "use server";
 
-import { users, UserSchema } from "../db/schema";
+import { formSumissions, users, UserSchema } from "../db/schema";
 import bcrypt from "bcryptjs";
 import { db } from "../db";
 import { revalidatePath } from "next/cache";
@@ -136,4 +136,41 @@ export async function Login(prevState: ActionResult, formData: FormData) {
   session.isLoggedIn = true;
   await session.save();
   redirect("/dashboard");
+}
+
+type DocumentUrls = {
+  titleDeed?: string;
+  chargeDocument?: string;
+  personalInsurance?: string;
+  powerOfAttorney?: string;
+  identificationDocument?: string;
+};
+
+export async function createFormSubmission(
+  formData: any,
+  documentUrls: DocumentUrls
+) {
+  try {
+    const result = await db.insert(formSumissions).values({
+      fullName: formData.fullName,
+      email: formData.email,
+      address: formData.address,
+      titleNumber: formData.titleNumber,
+      propertyDescription: formData.propertyDescription,
+      principalAmount: formData.principalAmount,
+      principalAmountWords: formData.principalAmountWords,
+      interestRate: formData.interestRate,
+      repaymentDate: formData.repaymentDate,
+      titleDeedUrl: documentUrls.titleDeed,
+      chargeDocumentUrl: documentUrls.chargeDocument,
+      personalInsuranceUrl: documentUrls.personalInsurance,
+      powerOfAttorneyUrl: documentUrls.powerOfAttorney,
+      identificationDocumentUrl: documentUrls.identificationDocument,
+    });
+
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Database insertion failed:", error);
+    return { success: false, error: "Failed to save form submission" };
+  }
 }

@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import { getSession } from "../session";
 import { ActionResult } from "next/dist/server/app-render/types";
 import { eq, or } from "drizzle-orm";
+import { sendConfirmationEmail } from "./email";
+const { randomBytes } = require("node:crypto");
 
 export async function createUser(
   prevState: ActionResult,
@@ -43,6 +45,8 @@ export async function createUser(
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log("Hashed Password:", hashedPassword);
 
+  const confirmationToken = randomBytes(32).toString("hex");
+
   try {
     const existingUser = await db
       .select()
@@ -66,8 +70,11 @@ export async function createUser(
       fullName,
       phoneNumber,
       dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+      emailConfirmed: false,
+      confirmationToken: confirmationToken,
     });
     console.log("User Creation Result:", result);
+    await sendConfirmationEmail(email, confirmationToken);
     revalidatePath("/signup");
   } catch (error) {
     console.error("Database Error:", error);
@@ -77,6 +84,34 @@ export async function createUser(
     };
   }
   redirect("/login");
+}
+
+export async function confirmEmail(token: string): Promise<ActionResult> {
+  try {
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.confirmationToken, token),
+    });
+    if (!user) {
+      return {
+        errors: {},
+        message: "Invalid Confirmation token",
+      };
+    }
+    await db
+      .update(users)
+      .set({ emailConfirmed: true, confirmationToken: null })
+      .where(eq(users.id, user.id));
+    return {
+      errors: {},
+      message: "Email Confirmed Succesfully",
+    };
+  } catch (error) {
+    console.error("Database Error:", error);
+    return {
+      errors: {},
+      message: "Database Error: Failed to confirm email",
+    };
+  }
 }
 
 export async function Login(prevState: ActionResult, formData: FormData) {
@@ -91,7 +126,11 @@ export async function Login(prevState: ActionResult, formData: FormData) {
       message: "Invalid email or password",
     };
   }
-
+  if (!user.emailConfirmed) {
+    return {
+      message: "Please confirm email before loggin in",
+    };
+  }
   const session = await getSession();
   session.userId = user.id;
   session.isLoggedIn = true;

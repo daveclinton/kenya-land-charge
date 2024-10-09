@@ -6,7 +6,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
-    "db:drop":"drizzle-kit drop",
+    "db:drop": "drizzle-kit drop",
     "db:migrate": "pnpx tsx drizzle/migrate.ts"
   },
   "dependencies": {
@@ -44,6 +44,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "19.0.0-rc-7771d3a7-20240827",
     "react-hook-form": "^7.53.0",
+    "resend": "^4.0.0",
     "server-only": "^0.0.1",
     "stripe": "^16.12.0",
     "tailwind-merge": "^2.5.2",

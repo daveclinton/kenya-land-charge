@@ -13,6 +13,25 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Stepper, Step, StepLabel } from "@mui/material";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { Doughnut } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip as ChartTooltip,
+  Legend as ChartLegend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, ChartTooltip, ChartLegend);
 
 const formDataSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -76,6 +95,28 @@ const LoanApplicationDashboard = () => {
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
     console.log(documents);
+    // Here you would typically send the data to your backend
+  };
+
+  // Mock data for visualizations
+  const loanHistory = [
+    { month: "Jan", amount: 1000 },
+    { month: "Feb", amount: 1500 },
+    { month: "Mar", amount: 1200 },
+    { month: "Apr", amount: 1800 },
+    { month: "May", amount: 2000 },
+    { month: "Jun", amount: 1700 },
+  ];
+
+  const creditScoreData = {
+    labels: ["Excellent", "Good", "Fair", "Poor"],
+    datasets: [
+      {
+        data: [65, 20, 10, 5],
+        backgroundColor: ["#4CAF50", "#8BC34A", "#FFC107", "#FF5722"],
+        hoverBackgroundColor: ["#45a049", "#7cb342", "#ffb300", "#f4511e"],
+      },
+    ],
   };
 
   const renderStepContent = (step: number) => {
@@ -224,34 +265,109 @@ const LoanApplicationDashboard = () => {
     }
   };
 
-  return (
-    <Card className="w-full max-w-4xl mx-auto">
+  const renderDashboardOverview = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold">Loan History</h3>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={loanHistory}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold">Credit Score Distribution</h3>
+        </CardHeader>
+        <CardContent>
+          <div className="h-48">
+            <Doughnut
+              data={creditScoreData}
+              options={{ maintainAspectRatio: false }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderLoanSummary = () => (
+    <Card className="mb-8">
       <CardHeader>
-        <h2 className="text-2xl font-bold">Loan Application</h2>
+        <h3 className="text-lg font-semibold">Loan Summary</h3>
       </CardHeader>
       <CardContent>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
-          {renderStepContent(activeStep)}
-        </form>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <p className="text-sm text-gray-500">Total Loans</p>
+            <p className="text-xl font-bold">3</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Active Loans</p>
+            <p className="text-xl font-bold">2</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Total Amount</p>
+            <p className="text-xl font-bold">$25,000</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Next Payment Due</p>
+            <p className="text-xl font-bold">15 days</p>
+          </div>
+        </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={handleBack} disabled={activeStep === 0}>
-          Back
-        </Button>
-        {activeStep === steps.length - 1 ? (
-          <Button onClick={handleSubmit(onSubmit)}>Submit Application</Button>
-        ) : (
-          <Button onClick={handleNext}>Next</Button>
-        )}
-      </CardFooter>
     </Card>
+  );
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Loan Dashboard</h1>
+
+      {renderDashboardOverview()}
+      {renderLoanSummary()}
+
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <h2 className="text-2xl font-bold">New Loan Application</h2>
+        </CardHeader>
+        <CardContent>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+            {renderStepContent(activeStep)}
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handleBack} disabled={activeStep === 0}>
+            Back
+          </Button>
+          {activeStep === steps.length - 1 ? (
+            <Button onClick={handleSubmit(onSubmit)}>Submit Application</Button>
+          ) : (
+            <Button onClick={handleNext}>Next</Button>
+          )}
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

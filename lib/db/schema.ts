@@ -47,6 +47,20 @@ export const UserSchema = z.object({
 
 export type User = typeof users.$inferSelect;
 
+ const formDataSchema = z.object({
+  fullName: z.string(),
+  email: z.string().email(),
+  address: z.string(),
+  titleNumber: z.string(),
+  propertyDescription: z.string(),
+  principalAmount: z.number(),
+  principalAmountWords: z.string(),
+  interestRate: z.number(),
+  repaymentDate: z.date(),
+});
+
+export type FormData2 = z.infer<typeof formDataSchema>;
+
 export const formSumissions = pgTable("form_submissions", {
   id: serial("id").primaryKey(),
   fullName: varchar("full_name", { length: 255 }).notNull(),

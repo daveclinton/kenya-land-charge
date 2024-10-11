@@ -15,6 +15,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Link from "next/link";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -92,6 +93,12 @@ const SignUpForm = () => {
               )}
             </div>
             <SubmitButton />
+            <div className="text-sm text-center text-gray-500">
+              Already have an account?
+              <Link href="/login" className="text-primary hover:underline">
+                Login
+              </Link>
+            </div>
             {alert.message && (
               <Alert
                 variant={alert.type === "error" ? "destructive" : "default"}

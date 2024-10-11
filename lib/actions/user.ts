@@ -6,16 +6,20 @@ import { db } from "../db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSession } from "../session";
-import { ActionResult } from "next/dist/server/app-render/types";
 import { eq, or } from "drizzle-orm";
 import { sendConfirmationEmail } from "./email";
 const { randomBytes } = require("node:crypto");
+
+type ActionResult = {
+  errors?: Record<string, string[]>;
+  message?: string | null;
+  success?: boolean;
+};
 
 export async function createUser(
   prevState: ActionResult,
   formData: FormData
 ): Promise<ActionResult> {
-  // Log the initial form data
   console.log("Form Data:", Array.from(formData.entries()));
 
   const validatedFields = UserSchema.safeParse({
@@ -36,6 +40,7 @@ export async function createUser(
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: null,
+      success: false,
     };
   }
 
@@ -62,9 +67,11 @@ export async function createUser(
           [existingField]: [`User with this ${existingField} already exists`],
         },
         message: null,
+        success: false,
       };
     }
-    const result = await db.insert(users).values({
+
+    await db.insert(users).values({
       email,
       password: hashedPassword,
       fullName,
@@ -73,17 +80,25 @@ export async function createUser(
       emailConfirmed: false,
       confirmationToken: confirmationToken,
     });
-    console.log("User Creation Result:", result);
+
     await sendConfirmationEmail(email, confirmationToken);
     revalidatePath("/signup");
+
+    // Return a success message and flag
+    return {
+      errors: {},
+      message:
+        "User created successfully. Please check your email for confirmation.",
+      success: true,
+    };
   } catch (error) {
     console.error("Database Error:", error);
     return {
       errors: {},
       message: "Database Error: Failed to create user",
+      success: false,
     };
   }
-  redirect("/login");
 }
 
 export async function confirmEmail(token: string): Promise<ActionResult> {

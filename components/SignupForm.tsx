@@ -21,7 +21,9 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -42,6 +44,8 @@ const SubmitButton = () => {
 const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const { toast } = useToast();
+  const router = useRouter();
 
   const handleSubmit = (formData: FormData) => {
     if (selectedDate) {
@@ -49,6 +53,30 @@ const SignUpForm = () => {
     }
     formAction(formData);
   };
+
+  useEffect(() => {
+    if (state.success) {
+      toast({
+        title: "Success",
+        description: state.message,
+      });
+      router.push("/login");
+    } else if (state.errors) {
+      Object.entries(state.errors).forEach(([field, errors]) => {
+        toast({
+          title: "Error",
+          description: `${field}: ${errors.join(", ")}`,
+          variant: "destructive",
+        });
+      });
+    } else if (state.message) {
+      toast({
+        title: "Error",
+        description: state.message,
+        variant: "destructive",
+      });
+    }
+  }, [state, toast, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">

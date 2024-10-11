@@ -42,7 +42,7 @@ export default function Header() {
         </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <Link
-            href="/registration"
+            href="/signup"
             type="button"
             className="text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
           >
@@ -95,7 +95,7 @@ export default function Header() {
 
             <li>
               <Link
-                href="/registration"
+                href="/signup"
                 className={`block py-2 px-3 ${
                   pathname === "/registration"
                     ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"

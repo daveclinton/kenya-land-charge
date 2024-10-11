@@ -51,7 +51,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Create an Account</CardTitle>

@@ -1,54 +1,57 @@
-import { Menu } from "lucide-react";
+import React from "react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sidebar } from "./Sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function MobileHeader() {
+export function DashboardHeader({
+  user,
+}: {
+  user: { fullName: string; email: string };
+}) {
   return (
-    <div className="flex items-center lg:hidden">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="mr-2">
-            <Menu className="h-4 w-4" />
+    <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky p-5 top-0 z-50 mb-5 rounded-md w-full border-b">
+      <div className="container flex h-10 items-center justify-between">
+        <h1 className="text-xl font-semibold">Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
           </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-64 sm:w-80">
-          <Sidebar />
-        </SheetContent>
-      </Sheet>
-      <div className="flex items-center">
-        <span className="text-xl font-bold">Kiathagana LLC</span>
+          <Avatar>
+            <AvatarImage
+              src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.fullName}`}
+              alt={user.fullName}
+            />
+            <AvatarFallback>
+              {user.fullName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+        </div>
       </div>
-    </div>
-  );
-}
-
-export function DashboardHeader({ user }: any) {
-  return (
-    <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-1">
-          Welcome Back, {user.fullName}
-        </h2>
-        <p className="text-gray-500">Friday, 3 March 2025</p>
+      <div className="container py-4">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">
+              Welcome Back, {user.fullName}
+            </h2>
+          </div>
+          <Tabs
+            defaultValue="overview"
+            className=" hidden lg:block w-full lg:w-auto"
+          >
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="applications">Applications</TabsTrigger>
+              <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
-      <Tabs defaultValue="overview" className="w-full lg:w-[400px]">
-        <TabsList className="w-full lg:w-auto">
-          <TabsTrigger value="overview" className="flex-1 lg:flex-none">
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="applications" className="flex-1 lg:flex-none">
-            Applications
-          </TabsTrigger>
-          <TabsTrigger value="payments" className="flex-1 lg:flex-none">
-            Payments
-          </TabsTrigger>
-          <TabsTrigger value="profile" className="flex-1 lg:flex-none">
-            Profile
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
     </header>
   );
 }

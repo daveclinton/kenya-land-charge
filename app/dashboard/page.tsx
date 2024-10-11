@@ -3,13 +3,13 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { ClientInitializer } from "@/components/ClientInitializer";
-import { Sidebar } from "@/components/Sidebar";
-import { DashboardHeader, MobileHeader } from "@/components/DashboardHeader";
+import { DashboardHeader } from "@/components/DashboardHeader";
 import { QuickApplySection } from "@/components/QuickApply";
 import {
   MobileNavigation,
   RecentLoanActivity,
 } from "@/components/RecentActivity";
+import LoanSummary from "@/components/features/LoanSummary";
 
 export default async function Dashboard() {
   const session = await getSession();
@@ -21,20 +21,15 @@ export default async function Dashboard() {
   return (
     <div className="flex flex-col h-screen bg-gray-100 lg:flex-row">
       <ClientInitializer userData={user} />
-
-      {/* Sidebar for desktop */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-white p-6">
-        <Sidebar />
-      </aside>
-
       {/* Main Content */}
       <main className="flex-1 p-4 lg:p-8 overflow-auto pb-16 lg:pb-8">
-        <MobileHeader />
         <DashboardHeader user={user} />
-        <QuickApplySection />
+        <div className="flex flex-col lg:flex-row mb-10 gap-5 ">
+          <QuickApplySection />
+          <LoanSummary />
+        </div>
         <RecentLoanActivity />
       </main>
-
       {/* Bottom Navigation for mobile */}
       <MobileNavigation />
     </div>

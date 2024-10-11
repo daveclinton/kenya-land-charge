@@ -11,13 +11,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EyeIcon, EyeOffIcon, AlertCircle } from "lucide-react";
+import { EyeIcon, EyeOffIcon, AlertCircle, Loader2 } from "lucide-react";
 import { Login } from "@/lib/actions/user";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
 
 const initialState = {
   message: null,
+};
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Loggin In
+        </>
+      ) : (
+        "Login"
+      )}
+    </Button>
+  );
 };
 
 export default function LoginForm() {
@@ -85,9 +101,7 @@ export default function LoginForm() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button className="w-full" type="submit">
-              Sign In
-            </Button>
+            <SubmitButton />
             <div className="text-sm text-center text-gray-500">
               Don't have an account?{" "}
               <Link href="/signup" className="text-primary hover:underline">

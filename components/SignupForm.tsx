@@ -11,10 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { Loader2, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -34,8 +34,8 @@ const SubmitButton = () => {
 
 const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
-  const { toast } = useToast();
   const router = useRouter();
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const handleSubmit = (formData: FormData) => {
     formAction(formData);
@@ -43,27 +43,17 @@ const SignUpForm = () => {
 
   useEffect(() => {
     if (state.success) {
-      toast({
-        title: "Success",
-        description: state.message,
-      });
+      setAlert({ type: "success", message: state.message as string });
       router.push("/login");
     } else if (state.errors) {
-      Object.entries(state.errors).forEach(([field, errors]) => {
-        toast({
-          title: "Error",
-          description: `${field}: ${errors.join(", ")}`,
-          variant: "destructive",
-        });
-      });
+      const errorMessages = Object.entries(state.errors)
+        .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
+        .join("; ");
+      setAlert({ type: "error", message: errorMessages });
     } else if (state.message) {
-      toast({
-        title: "Error",
-        description: state.message,
-        variant: "destructive",
-      });
+      setAlert({ type: "error", message: state.message });
     }
-  }, [state, toast, router]);
+  }, [state, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">
@@ -102,8 +92,13 @@ const SignUpForm = () => {
               )}
             </div>
             <SubmitButton />
-            {state.message && (
-              <p className="text-sm text-destructive mt-2">{state.message}</p>
+            {alert.message && (
+              <Alert
+                variant={alert.type === "error" ? "destructive" : "default"}
+              >
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{alert.message}</AlertDescription>
+              </Alert>
             )}
           </form>
         </CardContent>

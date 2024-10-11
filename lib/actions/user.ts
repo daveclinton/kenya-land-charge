@@ -81,7 +81,7 @@ export async function createUser(
       confirmationToken: confirmationToken,
     });
 
-    await sendConfirmationEmail(email, confirmationToken);
+    await sendConfirmationEmail(email, confirmationToken, fullName);
     revalidatePath("/signup");
 
     // Return a success message and flag

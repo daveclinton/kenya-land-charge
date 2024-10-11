@@ -45,9 +45,11 @@ export async function sendConfirmationEmail(
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px; border-top: 1px solid #dddddd;">
               <tr>
                   <td style="padding: 20px 0; text-align: center; font-size: 12px; color: #888888;">
-                      <p>&copy; 2023 Kiathagana Financial LLC. All rights reserved.</p>
-                      <p>123 Financial Street, Suite 456, Nairobi, Kenya</p>
-                      <p>Phone: +254 123 456 789 | Email: support@kiathaganafinancial.com</p>
+                      <p>&copy; 2024 Kiathagana Financial LLC. All rights reserved.</p>
+                      <p> <strong>Baltimore Office:</strong><br>
+                        103 Village of Pine Court #1A<br>
+                          Baltimore, MD 21244</p>
+                      <p>Phone: +1 443-675-8660 | Email: contact@kiathagana.com</p>
                   </td>
               </tr>
           </table>

@@ -28,9 +28,6 @@ export default function Component() {
             don't see the email, check your spam folder.
           </p>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button variant="outline">Return to Home</Button>
-        </CardFooter>
       </Card>
     </div>
   );

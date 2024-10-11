@@ -45,7 +45,7 @@ const SignUpForm = () => {
   useEffect(() => {
     if (state.success) {
       setAlert({ type: "success", message: state.message as string });
-      router.push("/login");
+      router.push("/email-confirmation");
     } else if (state.errors) {
       const errorMessages = Object.entries(state.errors)
         .map(([field, errors]) => `${field}: ${errors.join(", ")}`)

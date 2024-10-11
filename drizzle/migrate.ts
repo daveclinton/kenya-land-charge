@@ -7,12 +7,9 @@ import postgres from "postgres";
 
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
-const isLocal =
-  process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
-
 const sql = postgres(process.env.DATABASE_URL!, {
   max: 1,
-  ssl: isLocal === true,
+  ssl: true,
   onnotice: (notice) => console.log("Database Notice:", notice),
   onparameter: (parameterStatus) =>
     console.log("Parameter Status:", parameterStatus),

@@ -27,15 +27,6 @@ export default function Component() {
             Please click the link in the email to confirm your account. If you
             don't see the email, check your spam folder.
           </p>
-          <div className="text-center text-sm">
-            <p>Didn't receive the email?</p>
-            <Button
-              variant="link"
-              className="p-0 h-auto font-normal text-primary"
-            >
-              Click here to resend
-            </Button>
-          </div>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Button variant="outline">Return to Home</Button>

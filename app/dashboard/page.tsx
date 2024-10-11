@@ -1,5 +1,5 @@
 import { ClientInitializer } from "@/components/ClientInitializer";
-import LoanApplicationDashboard from "@/components/LoanApplicatinDashBoard";
+import LoanApplicationDashboard from "@/components/LoanApplicationDashboard";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { getSession } from "@/lib/session";
@@ -35,9 +35,7 @@ export default async function Dashboard() {
           />
         </div>
       </section>
-
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Loan Application</h2>
         <LoanApplicationDashboard />
       </section>
     </main>

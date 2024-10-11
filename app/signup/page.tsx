@@ -1,16 +1,10 @@
 import SignUpForm from "@/components/SignupForm";
-import Link from "next/link";
+import React from "react";
 
 export default function LoginPage() {
   return (
-    <div className="max-w-md mx-auto mt-10 p-6">
+    <React.Fragment>
       <SignUpForm />
-      <p className="mt-4">
-        Already have an account?{" "}
-        <Link href="/login" className="text-blue-500 hover:text-blue-600">
-          Log in
-        </Link>
-      </p>
-    </div>
+    </React.Fragment>
   );
 }

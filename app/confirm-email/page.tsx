@@ -6,6 +6,7 @@ import React, { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 function ConfirmEmailContent() {
   const searchParams = useSearchParams();
@@ -30,7 +31,7 @@ function ConfirmEmailContent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -57,12 +58,12 @@ function ConfirmEmailContent() {
             {message || "Confirming your email..."}
           </p>
           {status !== "loading" && (
-            <a
-              href="/"
+            <Link
+              href="/login"
               className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
             >
-              Return to Home
-            </a>
+              Proceed to login
+            </Link>
           )}
         </CardContent>
       </Card>

@@ -1,5 +1,4 @@
 "use client";
-
 import { createUser } from "@/lib/actions/user";
 import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -12,18 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { Loader2, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Link from "next/link";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -43,40 +35,26 @@ const SubmitButton = () => {
 
 const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const { toast } = useToast();
   const router = useRouter();
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const handleSubmit = (formData: FormData) => {
-    if (selectedDate) {
-      formData.append("dateOfBirth", selectedDate.toISOString());
-    }
     formAction(formData);
   };
 
   useEffect(() => {
     if (state.success) {
-      toast({
-        title: "Success",
-        description: state.message,
-      });
-      router.push("/login");
+      setAlert({ type: "success", message: state.message as string });
+      router.push("/email-confirmation");
     } else if (state.errors) {
-      Object.entries(state.errors).forEach(([field, errors]) => {
-        toast({
-          title: "Error",
-          description: `${field}: ${errors.join(", ")}`,
-          variant: "destructive",
-        });
-      });
+      const errorMessages = Object.entries(state.errors)
+        .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
+        .join("; ");
+      setAlert({ type: "error", message: errorMessages });
     } else if (state.message) {
-      toast({
-        title: "Error",
-        description: state.message,
-        variant: "destructive",
-      });
+      setAlert({ type: "error", message: state.message });
     }
-  }, [state, toast, router]);
+  }, [state, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">
@@ -114,57 +92,20 @@ const SignUpForm = () => {
                 </p>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                placeholder="123-456-7890"
-              />
-              {state.errors?.phoneNumber && (
-                <p className="text-sm text-destructive">
-                  {state.errors.phoneNumber}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>Date of Birth</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? (
-                      format(selectedDate, "PPP")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              {state.errors?.dateOfBirth && (
-                <p className="text-sm text-destructive">
-                  {state.errors.dateOfBirth}
-                </p>
-              )}
-            </div>
             <SubmitButton />
-            {state.message && (
-              <p className="text-sm text-destructive mt-2">{state.message}</p>
+            <div className="text-sm text-center text-gray-500">
+              Already have an account?
+              <Link href="/login" className="text-primary hover:underline">
+                Login
+              </Link>
+            </div>
+            {alert.message && (
+              <Alert
+                variant={alert.type === "error" ? "destructive" : "default"}
+              >
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{alert.message}</AlertDescription>
+              </Alert>
             )}
           </form>
         </CardContent>

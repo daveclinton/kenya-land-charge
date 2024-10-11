@@ -26,8 +26,8 @@ export async function createUser(
     email: formData.get("email"),
     password: formData.get("password"),
     fullName: formData.get("fullName"),
-    phoneNumber: formData.get("phoneNumber"),
-    dateOfBirth: formData.get("dateOfBirth"),
+    // phoneNumber: formData.get("phoneNumber"),
+    // dateOfBirth: formData.get("dateOfBirth"),
   });
 
   console.log("Validation Result:", validatedFields);
@@ -44,8 +44,7 @@ export async function createUser(
     };
   }
 
-  const { email, password, fullName, phoneNumber, dateOfBirth } =
-    validatedFields.data;
+  const { email, password, fullName } = validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log("Hashed Password:", hashedPassword);
@@ -56,12 +55,13 @@ export async function createUser(
     const existingUser = await db
       .select()
       .from(users)
-      .where(or(eq(users.email, email), eq(users.phoneNumber, phoneNumber)))
+      .where(or(eq(users.email, email)))
       .limit(1);
 
     if (existingUser.length > 0) {
-      const existingField =
-        existingUser[0].email === email ? "email" : "phone number";
+      const existingField = "email";
+      // const existingField =
+      //   existingUser[0].email === email ? "email" : "phone number";
       return {
         errors: {
           [existingField]: [`User with this ${existingField} already exists`],
@@ -75,8 +75,8 @@ export async function createUser(
       email,
       password: hashedPassword,
       fullName,
-      phoneNumber,
-      dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+      // phoneNumber,
+      // dateOfBirth: dateOfBirth.toISOString().split("T")[0],
       emailConfirmed: false,
       confirmationToken: confirmationToken,
     });

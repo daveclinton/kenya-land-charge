@@ -1,13 +1,39 @@
 import React from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Banknote, CreditCard, Calendar, PieChart } from "lucide-react";
+import {
+  Banknote,
+  CreditCard,
+  Calendar,
+  PieChart,
+  DollarSign,
+  TrendingUp,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function LoanSummary() {
   return (
     <Card className="w-full">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <h3 className="text-2xl font-bold">Loan Summary</h3>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4">
+                <TrendingUp className="h-4 w-4 mr-2" />
+                View Details
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View detailed loan information</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -36,22 +62,41 @@ export default function LoanSummary() {
             subtext="$500 due"
           />
         </div>
-        <div className="mt-8">
-          <h4 className="text-lg font-semibold mb-2">Repayment Progress</h4>
+        <div className="mt-8 space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold">Repayment Progress</h4>
+            <span className="text-sm font-medium text-muted-foreground">
+              $6,500 / $25,000
+            </span>
+          </div>
           <Progress value={26} className="h-2 w-full" />
-          <p className="text-sm text-muted-foreground mt-2">
-            26% of total loan amount repaid
-          </p>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>26% of total loan amount repaid</span>
+            <span className="flex items-center">
+              <DollarSign className="h-4 w-4 mr-1" />
+              18,500 remaining
+            </span>
+          </div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function SummaryItem({ icon, label, value, subtext }: any) {
+function SummaryItem({
+  icon,
+  label,
+  value,
+  subtext,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  subtext: string;
+}) {
   return (
-    <div className="flex items-center space-x-4 p-4 rounded-lg bg-card">
-      <div className="flex-shrink-0">{icon}</div>
+    <div className="flex items-center space-x-4 p-4 rounded-lg bg-card border">
+      <div className="flex-shrink-0 p-2 bg-primary/10 rounded-full">{icon}</div>
       <div>
         <p className="text-sm font-medium text-muted-foreground">{label}</p>
         <p className="text-2xl font-bold">{value}</p>

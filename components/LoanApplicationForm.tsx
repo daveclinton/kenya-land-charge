@@ -91,6 +91,7 @@ const LoanApplicationForm = () => {
         <div className="flex flex-wrap justify-between items-center">
           {steps.map((step, index) => (
             <div
+              key={index}
               className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
                 index < currentStep
                   ? "bg-blue-500 text-white"

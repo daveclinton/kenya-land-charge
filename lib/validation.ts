@@ -27,4 +27,9 @@ export const formSchema = z.object({
   repaymentDate: z.date({
     required_error: "Repayment date is required",
   }),
+  titleDeedUrl: z.string(),
+  chargeDocumentUrl: z.string(),
+  personalInsuranceUrl: z.string(),
+  powerOfAttorneyUrl: z.string(),
+  identificationDocumentUrl: z.string(),
 });

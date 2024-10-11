@@ -1,12 +1,11 @@
 "use client";
+
+import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 
-const year = new Date().getFullYear();
-
-function Header() {
+export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -118,96 +117,9 @@ function Header() {
                 About
               </Link>
             </li>
-            {/* <li>
-              <Link
-                href="/form"
-                className={`block py-2 px-3 ${
-                  pathname === "/form"
-                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
-                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-              >
-                Form
-              </Link>
-            </li> */}
-            {/* <li>
-              <Link
-                href="/faqs"
-                className={`block py-2 px-3 ${
-                  pathname === "/faqs"
-                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
-                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-              >
-                FAQs
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className={`block py-2 px-3 ${
-                  pathname === "/contact"
-                    ? "text-white bg-sky-500 md:bg-transparent md:text-sky-500"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500"
-                } rounded md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
-              >
-                Contact
-              </Link>
-            </li> */}
           </ul>
         </div>
       </div>
     </nav>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-sky-100 rounded-lg shadow m-4 dark:bg-gray-800">
-      <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © {year} {` `}
-          <Link href="/" className="hover:underline">
-            Kiathagana Financial Management LLC
-          </Link>
-          . All Rights Reserved.
-        </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-          <li>
-            <Link href="/about" className="hover:underline me-4 md:me-6">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/privacy-policy"
-              className="hover:underline me-4 md:me-6"
-            >
-              Privacy Policy
-            </Link>
-          </li>
-          <li>
-            <Link href="/licensing" className="hover:underline me-4 md:me-6">
-              Licensing
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:underline">
-              Contact
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </footer>
-  );
-}
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <section className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow">{children}</main>
-      <Footer />
-    </section>
   );
 }

@@ -16,11 +16,15 @@ function ConfirmEmailContent() {
   );
   const token = searchParams.get("token");
 
+  console.log("Here", status);
+
   React.useEffect(() => {
     if (token) {
       confirmEmail(token).then((result: any) => {
         setMessage(result.message || "An error occurred");
-        setStatus(result.success ? "success" : "error");
+        setStatus(
+          result.message === "Email Confirmed Succesfully" ? "success" : "error"
+        );
       });
     }
   }, [token]);

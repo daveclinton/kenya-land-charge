@@ -9,13 +9,13 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Stepper, Step, StepLabel } from "@mui/material";
 import useStepperStore from "@/lib/store/useStepper";
 import PersonalInfoStep from "./formSteps/PersonalInfoStep";
 import PropertyInfoStep from "./formSteps/PropertyInfoStep";
 import LoanDetailsStep from "./formSteps/LoanDetailsStep";
 import DocumentUploadStep from "./formSteps/DocumentUpload";
 import ReviewStep from "./formSteps/ReviewStep";
+import { Check } from "lucide-react";
 
 const formDataSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -88,28 +88,48 @@ const LoanApplicationForm = () => {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <h2 className="text-2xl font-bold">New Loan Application</h2>
+        <div className="flex flex-wrap justify-between items-center">
+          {steps.map((step, index) => (
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
+                index < currentStep
+                  ? "bg-blue-500 text-white"
+                  : index === currentStep
+                  ? "border-2 border-blue-500 text-blue-500"
+                  : "border-2 border-gray-200 text-gray-400"
+              }`}
+            >
+              {index < currentStep ? (
+                <Check className="w-5 h-5" />
+              ) : (
+                <step.icon className="w-5 h-5" />
+              )}
+            </div>
+          ))}
+        </div>
       </CardHeader>
       <CardContent>
-        <Stepper activeStep={currentStep} alternativeLabel>
-          {steps.map((label, index) => (
-            <Step key={index}>
-              <StepLabel>{label.title}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">{steps[currentStep]?.title}</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
           {renderStepContent(currentStep)}
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button onClick={prevStep} disabled={currentStep === 0}>
+        <Button
+          onClick={prevStep}
+          disabled={currentStep === 0}
+          className="w-24"
+        >
           Back
         </Button>
         {currentStep === steps.length - 1 ? (
-          <Button onClick={handleSubmit(onSubmit)}>Submit Application</Button>
+          <Button onClick={handleSubmit(onSubmit)} className="w-40">
+            Submit Application
+          </Button>
         ) : (
-          <Button onClick={nextStep}>Next</Button>
+          <Button onClick={nextStep} className="w-24">
+            Next
+          </Button>
         )}
       </CardFooter>
     </Card>

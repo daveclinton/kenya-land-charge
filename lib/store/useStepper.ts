@@ -1,8 +1,16 @@
 import { create } from "zustand";
-// import { User, Home, FileText, Upload, ClipboardCheck } from "lucide-react";
+import {
+  User,
+  UserIcon,
+  HomeIcon,
+  CircleDollarSign,
+  FileIcon,
+  ClipboardCheckIcon,
+} from "lucide-react";
 
 interface Step {
   title: string;
+  icon: typeof User;
 }
 
 interface StepperState {
@@ -16,11 +24,11 @@ interface StepperState {
 const useStepperStore = create<StepperState>((set) => ({
   currentStep: 0,
   steps: [
-    { title: "Personal Information" },
-    { title: "Property Details" },
-    { title: "Loan Terms" },
-    { title: "Document Upload" },
-    { title: "Review and Submit" },
+    { title: "Personal Info", icon: UserIcon },
+    { title: "Property", icon: HomeIcon },
+    { title: "Loan Details", icon: CircleDollarSign },
+    { title: "Documents", icon: FileIcon },
+    { title: "Review", icon: ClipboardCheckIcon },
   ],
   setCurrentStep: (step) => set({ currentStep: step }),
   nextStep: () =>

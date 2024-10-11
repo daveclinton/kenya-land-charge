@@ -1,5 +1,4 @@
 "use client";
-
 import { createUser } from "@/lib/actions/user";
 import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -12,15 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -43,14 +34,10 @@ const SubmitButton = () => {
 
 const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = (formData: FormData) => {
-    if (selectedDate) {
-      formData.append("dateOfBirth", selectedDate.toISOString());
-    }
     formAction(formData);
   };
 
@@ -111,54 +98,6 @@ const SignUpForm = () => {
               {state.errors?.password && (
                 <p className="text-sm text-destructive">
                   {state.errors.password}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                placeholder="123-456-7890"
-              />
-              {state.errors?.phoneNumber && (
-                <p className="text-sm text-destructive">
-                  {state.errors.phoneNumber}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>Date of Birth</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? (
-                      format(selectedDate, "PPP")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              {state.errors?.dateOfBirth && (
-                <p className="text-sm text-destructive">
-                  {state.errors.dateOfBirth}
                 </p>
               )}
             </div>

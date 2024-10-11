@@ -15,8 +15,8 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: varchar("full_name", { length: 255 }).notNull(),
-  phoneNumber: text("phone_number").notNull().unique(),
-  dateOfBirth: date("date_of_birth", { mode: "string" }).notNull(),
+  phoneNumber: text("phone_number").unique(),
+  dateOfBirth: date("date_of_birth", { mode: "string" }),
   createdAt: timestamp("created_at").defaultNow(),
   emailConfirmed: boolean("email_confirmed").notNull().default(false),
   confirmationToken: varchar("confirmation_token", { length: 64 }),
@@ -47,7 +47,7 @@ export const UserSchema = z.object({
 
 export type User = typeof users.$inferSelect;
 
- const formDataSchema = z.object({
+const formDataSchema = z.object({
   fullName: z.string(),
   email: z.string().email(),
   address: z.string(),

@@ -38,12 +38,7 @@ export default function Component() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button
-            variant="outline"
-            onClick={() => (window.location.href = "/")}
-          >
-            Return to Home
-          </Button>
+          <Button variant="outline">Return to Home</Button>
         </CardFooter>
       </Card>
     </div>

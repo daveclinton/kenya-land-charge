@@ -26,8 +26,6 @@ export async function createUser(
     email: formData.get("email"),
     password: formData.get("password"),
     fullName: formData.get("fullName"),
-    // phoneNumber: formData.get("phoneNumber"),
-    // dateOfBirth: formData.get("dateOfBirth"),
   });
 
   console.log("Validation Result:", validatedFields);
@@ -60,8 +58,6 @@ export async function createUser(
 
     if (existingUser.length > 0) {
       const existingField = "email";
-      // const existingField =
-      //   existingUser[0].email === email ? "email" : "phone number";
       return {
         errors: {
           [existingField]: [`User with this ${existingField} already exists`],
@@ -72,12 +68,9 @@ export async function createUser(
     }
 
     await db.insert(users).values({
-      id: undefined as any,
       email,
       password: hashedPassword,
       fullName,
-      // phoneNumber,
-      // dateOfBirth: dateOfBirth.toISOString().split("T")[0],
       emailConfirmed: false,
       confirmationToken: confirmationToken,
     });

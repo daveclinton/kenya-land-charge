@@ -76,7 +76,7 @@ export type PersonalInfo = typeof personalInfo.$inferSelect;
 // Loans Table
 
 export const loans = pgTable("loans", {
-  id: bigint("id", { mode: "number" }).primaryKey().notNull(),
+  id: bigint("id", { mode: "number" }).primaryKey(),
   userId: bigint("user_id", { mode: "number" }).references(() => users.id),
   amount: numeric("amount").notNull(),
   repaymentPeriod: integer("repayment_period").notNull(),
@@ -86,6 +86,8 @@ export const loans = pgTable("loans", {
   disbursedAt: timestamp("disbursed_at", { withTimezone: true }),
 });
 
+export type NewLoan = typeof loans.$inferSelect;
+
 //Property Details Table
 export const propertyDetails = pgTable("property_details", {
   id: bigint("id", { mode: "number" }).primaryKey().notNull(),
@@ -93,6 +95,7 @@ export const propertyDetails = pgTable("property_details", {
   titleDeedNumber: text("title_deed_number").notNull(),
   propertyAddress: text("property_address").notNull(),
 });
+export type NewPropertyDetail = typeof propertyDetails.$inferSelect;
 
 // Documents
 
@@ -104,6 +107,8 @@ export const documents = pgTable("documents", {
   titleDeedLink: text("title_deed_link"),
   uploadedAt: timestamp("uploaded_at", { withTimezone: true }).defaultNow(),
 });
+
+export type NewDocument = typeof documents.$inferSelect;
 
 // Loan Repayment
 export const repayments = pgTable("repayments", {

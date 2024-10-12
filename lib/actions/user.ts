@@ -72,6 +72,7 @@ export async function createUser(
     }
 
     await db.insert(users).values({
+      id: undefined as any,
       email,
       password: hashedPassword,
       fullName,

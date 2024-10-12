@@ -13,7 +13,7 @@ import {
 import { z } from "zod";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: varchar("full_name", { length: 255 }).notNull(),
@@ -90,7 +90,7 @@ export type NewLoan = typeof loans.$inferSelect;
 
 //Property Details Table
 export const propertyDetails = pgTable("property_details", {
-  id: bigint("id", { mode: "number" }).primaryKey().notNull(),
+  id: bigint("id", { mode: "number" }).primaryKey(),
   loanId: bigint("loan_id", { mode: "number" }).references(() => loans.id),
   titleDeedNumber: text("title_deed_number").notNull(),
   propertyAddress: text("property_address").notNull(),
@@ -100,7 +100,7 @@ export type NewPropertyDetail = typeof propertyDetails.$inferSelect;
 // Documents
 
 export const documents = pgTable("documents", {
-  id: bigint("id", { mode: "number" }).primaryKey().notNull(),
+  id: bigint("id", { mode: "number" }).primaryKey(),
   loanId: bigint("loan_id", { mode: "number" }).references(() => loans.id),
   identificationDocumentLink: text("identification_document_link"),
   powerOfAttorneyLink: text("power_of_attorney_link"),
@@ -112,7 +112,7 @@ export type NewDocument = typeof documents.$inferSelect;
 
 // Loan Repayment
 export const repayments = pgTable("repayments", {
-  id: bigint("id", { mode: "number" }).primaryKey().notNull(),
+  id: bigint("id", { mode: "number" }).primaryKey(),
   loanId: bigint("loan_id", { mode: "number" }).references(() => loans.id),
   amount: numeric("amount").notNull(),
   paymentDate: timestamp("payment_date", { withTimezone: true }).defaultNow(),

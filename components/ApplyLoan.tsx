@@ -28,6 +28,7 @@ import {
   Check,
 } from "lucide-react";
 import { useFormStore } from "@/lib/store/useFormStore";
+import { userStore } from "@/lib/store/useStore";
 
 type FormData = {
   amount: number;
@@ -90,6 +91,10 @@ export default function ApplyLoanForm() {
     { icon: FileText, title: "Documents" },
     { icon: ClipboardList, title: "Review" },
   ];
+
+  const user = userStore((state) => state.user);
+
+  console.log(user);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

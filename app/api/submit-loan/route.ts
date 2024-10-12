@@ -37,12 +37,11 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     const userId = Number(formData.get("userId"));
-    console.log(userId);
+
     if (!userId || isNaN(userId)) {
       return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
     }
 
-    // Verify that the user exists
     const user = await db.query.users.findFirst({
       where: eq(users.id, userId),
     });
@@ -93,7 +92,6 @@ export async function POST(request: NextRequest) {
       return loan;
     });
 
-    // Fetch the complete loan data with relations
     const completeLoan = await db.query.loans.findFirst({
       where: eq(loans.id, newLoan.id),
       with: {

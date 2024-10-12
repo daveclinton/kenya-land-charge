@@ -1,8 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 import ApplyLoanForm from "./ApplyLoan";
+import { userStore } from "@/lib/store/useStore";
 
 export function QuickApplySection() {
+  const user = userStore.getState().user;
   return (
     <Card className="bg-white">
       <CardContent className="p-6">
@@ -12,7 +14,7 @@ export function QuickApplySection() {
         <p className="mb-4 text-sky-700">
           Need a loan? Start your application process quickly and easily.
         </p>
-        <ApplyLoanForm />
+        <ApplyLoanForm userId={user?.id} />
       </CardContent>
     </Card>
   );

@@ -1,7 +1,8 @@
-import { loans, propertyDetails, documents } from "@/lib/db/schema";
+import { loans, propertyDetails, documents, users } from "@/lib/db/schema";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../db";
+import { eq, or } from "drizzle-orm";
 
 const s3Client = new S3Client({
   region: process.env.S3_BUCKET_REGION!,
@@ -35,77 +36,94 @@ async function uploadFileToS3(file: File, key: string): Promise<string> {
 
 export async function handleLoanApplication(
   data: FormData,
-  userId: number | any
+  userId: number
 ): Promise<{ success: boolean; message: string }> {
+  // if (typeof userId !== "number" || isNaN(userId)) {
+  //   return { success: false, message: "Invalid user ID provided." };
+  // }
+
   try {
-    const [loanRecord] = await db
-      .insert(loans)
-      .values({
-        userId: BigInt(userId) as any,
-        amount: data.amount.toString(),
-        repaymentPeriod: data.repaymentPeriod,
-        status: "PENDING",
-      })
-      .returning();
+    const result = await db.transaction(async (tx) => {
+      const existingUser = await tx
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
-    if (!loanRecord) {
-      throw new Error("Failed to create loan record");
-    }
+      if (existingUser.length === 0) {
+        throw new Error("User does not exist.");
+      }
 
-    await db.insert(propertyDetails).values({
-      loanId: loanRecord.id,
-      titleDeedNumber: data.titleDeedNumber,
-      propertyAddress: data.propertyAddress,
+      const [loanRecord] = await tx
+        .insert(loans)
+        .values({
+          userId: userId,
+          amount: Number(data.amount),
+          repaymentPeriod: Number(data.repaymentPeriod),
+          status: "PENDING",
+        })
+        .returning();
+
+      if (!loanRecord || !loanRecord.id) {
+        throw new Error("Failed to create loan record.");
+      }
+
+      await tx.insert(propertyDetails).values({
+        loanId: loanRecord.id,
+        titleDeedNumber: data.titleDeedNumber,
+        propertyAddress: data.propertyAddress,
+      });
+
+      const documentLinks = {
+        identificationDocumentLink: "",
+        powerOfAttorneyLink: "",
+        titleDeedLink: "",
+      };
+
+      if (data.identificationDocument && data.identificationDocument[0]) {
+        const file = data.identificationDocument[0];
+        const fileExtension = file.name.split(".").pop() || "pdf"; // Default to 'pdf' if no extension
+        documentLinks.identificationDocumentLink = await uploadFileToS3(
+          file,
+          `loan_${loanRecord.id}/identification_${uuidv4()}.${fileExtension}`
+        );
+      }
+
+      if (data.powerOfAttorney && data.powerOfAttorney[0]) {
+        const file = data.powerOfAttorney[0];
+        const fileExtension = file.name.split(".").pop() || "pdf";
+        documentLinks.powerOfAttorneyLink = await uploadFileToS3(
+          file,
+          `loan_${loanRecord.id}/power_of_attorney_${uuidv4()}.${fileExtension}`
+        );
+      }
+
+      if (data.titleDeed && data.titleDeed[0]) {
+        const file = data.titleDeed[0];
+        const fileExtension = file.name.split(".").pop() || "pdf";
+        documentLinks.titleDeedLink = await uploadFileToS3(
+          file,
+          `loan_${loanRecord.id}/title_deed_${uuidv4()}.${fileExtension}`
+        );
+      }
+
+      await tx.insert(documents).values({
+        loanId: loanRecord.id,
+        ...documentLinks,
+      });
+
+      return {
+        success: true,
+        message: "Loan application submitted successfully.",
+      };
     });
 
-    const documentLinks = {
-      identificationDocumentLink: "",
-      powerOfAttorneyLink: "",
-      titleDeedLink: "",
-    };
-
-    if (data.identificationDocument && data.identificationDocument[0]) {
-      documentLinks.identificationDocumentLink = await uploadFileToS3(
-        data.identificationDocument[0],
-        `loan_${
-          loanRecord.id
-        }/identification_${uuidv4()}.${data.identificationDocument[0].name
-          .split(".")
-          .pop()}`
-      );
-    }
-
-    if (data.powerOfAttorney && data.powerOfAttorney[0]) {
-      documentLinks.powerOfAttorneyLink = await uploadFileToS3(
-        data.powerOfAttorney[0],
-        `loan_${
-          loanRecord.id
-        }/power_of_attorney_${uuidv4()}.${data.powerOfAttorney[0].name
-          .split(".")
-          .pop()}`
-      );
-    }
-
-    if (data.titleDeed && data.titleDeed[0]) {
-      documentLinks.titleDeedLink = await uploadFileToS3(
-        data.titleDeed[0],
-        `loan_${loanRecord.id}/title_deed_${uuidv4()}.${data.titleDeed[0].name
-          .split(".")
-          .pop()}`
-      );
-    }
-
-    await db.insert(documents).values({
-      loanId: loanRecord.id,
-      ...documentLinks,
-    });
-
+    return result;
+  } catch (error: any) {
+    console.error("Error in handleLoanApplication:", error.message || error);
     return {
-      success: true,
-      message: "Loan application submitted successfully",
+      success: false,
+      message: error.message || "Failed to submit loan application.",
     };
-  } catch (error) {
-    console.error("Error in handleLoanApplication:", error);
-    return { success: false, message: "Failed to submit loan application" };
   }
 }

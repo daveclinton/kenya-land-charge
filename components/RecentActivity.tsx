@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Home,
-  MessageSquare,
-  BarChart2,
-  Settings,
   ChevronRight,
   DollarSign,
+  UserCircle2,
+  BanknoteIcon,
+  CreditCardIcon,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export function RecentLoanActivity() {
   const activities = [
@@ -88,38 +91,51 @@ export function RecentLoanActivity() {
 
 export function MobileNavigation() {
   return (
-    <nav className="lg:hidden fixed bottom-0 bg-white w-full left-0 right-0 border-t border-sky-200 z-50">
+    <nav className="lg:hidden fixed bottom-0 bg-white left-0 right-0 border-t border-sky-200 z-50">
       <div className="container flex items-center justify-around h-16 bg-white">
-        <NavButton
+        <NavLink
+          href="/dashboard"
           icon={<Home className="h-5 w-5 text-sky-500" />}
           label="Home"
         />
-        <NavButton
-          icon={<MessageSquare className="h-5 w-5 text-sky-500" />}
-          label="Messages"
+        <NavLink
+          href="/dashboard/applications"
+          icon={<BanknoteIcon className="h-5 w-5 text-sky-500" />}
+          label="Applications"
         />
-        <NavButton
-          icon={<BarChart2 className="h-5 w-5 text-sky-500" />}
-          label="Analytics"
+        <NavLink
+          href="/dashboard/payments"
+          icon={<CreditCardIcon className="h-5 w-5 text-sky-500" />}
+          label="Payments"
         />
-        <NavButton
-          icon={<Settings className="h-5 w-5 text-sky-500" />}
-          label="Settings"
+        <NavLink
+          href="/dashboard/profile"
+          icon={<UserCircle2 className="h-5 w-5 text-sky-500" />}
+          label="My Profile"
         />
       </div>
     </nav>
   );
 }
+interface NavLinkProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+}
 
-function NavButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+export function NavLink({ href, icon, label }: NavLinkProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="flex flex-col items-center py-2 px-0 h-auto text-sky-900"
+    <Link
+      href={href}
+      className={`flex flex-col items-center py-2 px-5 rounded-lg h-auto text-sky-900 hover:bg-sky-100 transition-colors duration-200 ${
+        isActive ? "bg-sky-100" : ""
+      }`}
     >
       {icon}
       <span className="text-xs mt-1 text-sky-700">{label}</span>
-    </Button>
+    </Link>
   );
 }

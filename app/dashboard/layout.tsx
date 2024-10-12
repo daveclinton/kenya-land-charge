@@ -1,4 +1,5 @@
 import { ClientInitializer } from "@/components/ClientInitializer";
+import { DashboardHeader } from "@/components/DashboardHeader";
 import { MobileNavigation } from "@/components/RecentActivity";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/session";
@@ -17,10 +18,10 @@ export default async function DashboardLayout({
     .from(users)
     .where(eq(users.id, session.userId));
   return (
-    <div className="flex flex-col h-screen bg-white lg:flex-row">
+    <div className="flex flex-col h-screen bg-gray-100 lg:flex-row">
       <ClientInitializer userData={user} />
       <main className="flex-1 p-4 lg:p-8 overflow-auto pb-16 lg:pb-8">
-        {/* <DashboardHeader user={user} /> */}
+        <DashboardHeader user={user} />
         <React.Fragment>{children}</React.Fragment>
       </main>
       <MobileNavigation />

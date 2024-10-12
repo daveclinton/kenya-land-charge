@@ -11,7 +11,7 @@ export function DashboardHeader({
   user: { fullName: string; email: string };
 }) {
   return (
-    <header className="bg-white sticky p-5 top-0 z-50 mb-5 rounded-md w-full border-b border-sky-200">
+    <header className="bg-white p-5 top-0 z-50 mb-5 rounded-md w-full border-b border-sky-200">
       <div className="container flex h-10 items-center justify-between">
         <h1 className="text-xl font-semibold text-sky-900">
           Kiathagana Dashboard

@@ -32,9 +32,9 @@ export function RecentLoanActivity() {
   ];
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-white">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-2xl font-bold">
+        <CardTitle className="text-2xl font-bold text-sky-900">
           Recent Loan Activity
         </CardTitle>
         <Button variant="ghost" className="text-sm font-medium text-sky-500">
@@ -54,14 +54,14 @@ export function RecentLoanActivity() {
                   {activity.icon}
                 </div>
                 <div>
-                  <p className="font-medium">{activity.type}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-sky-900">{activity.type}</p>
+                  <p className="text-sm text-sky-700">
                     {new Date().toLocaleDateString()}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-medium flex items-center justify-end">
+                <p className="font-medium flex items-center justify-end text-sky-900">
                   <DollarSign className="h-4 w-4 mr-1 text-sky-500" />
                   {activity.amount.toLocaleString()}
                 </p>
@@ -88,8 +88,8 @@ export function RecentLoanActivity() {
 
 export function MobileNavigation() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 border-t border-border z-50">
-      <div className="container flex items-center justify-around h-16">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 border-t border-sky-200 z-50">
+      <div className="container flex items-center justify-around h-16 bg-white">
         <NavButton
           icon={<Home className="h-5 w-5 text-sky-500" />}
           label="Home"
@@ -116,10 +116,10 @@ function NavButton({ icon, label }: { icon: React.ReactNode; label: string }) {
     <Button
       variant="ghost"
       size="sm"
-      className="flex flex-col items-center py-2 px-0 h-auto"
+      className="flex flex-col items-center py-2 px-0 h-auto text-sky-900"
     >
       {icon}
-      <span className="text-xs mt-1">{label}</span>
+      <span className="text-xs mt-1 text-sky-700">{label}</span>
     </Button>
   );
 }

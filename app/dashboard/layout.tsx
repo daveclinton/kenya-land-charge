@@ -1,5 +1,4 @@
 import { ClientInitializer } from "@/components/ClientInitializer";
-import { DashboardHeader } from "@/components/DashboardHeader";
 import { MobileNavigation } from "@/components/RecentActivity";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/session";

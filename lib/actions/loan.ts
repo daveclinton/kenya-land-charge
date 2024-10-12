@@ -1,10 +1,10 @@
-import { db } from "@/lib/db";
 import { loans, propertyDetails, documents } from "@/lib/db/schema";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
+import { db } from "../db";
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION!,
+  region: process.env.S3_BUCKET_REGION!,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -30,12 +30,12 @@ async function uploadFileToS3(file: File, key: string): Promise<string> {
   });
 
   await s3Client.send(command);
-  return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${key}`;
 }
 
 export async function handleLoanApplication(
   data: FormData,
-  userId: number
+  userId: number | any
 ): Promise<{ success: boolean; message: string }> {
   try {
     const [loanRecord] = await db

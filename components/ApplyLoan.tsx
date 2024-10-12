@@ -28,7 +28,6 @@ import {
   Check,
 } from "lucide-react";
 import { useFormStore } from "@/lib/store/useFormStore";
-import { userStore } from "@/lib/store/useStore";
 
 type FormData = {
   amount: number;
@@ -40,7 +39,11 @@ type FormData = {
   titleDeed: FileList | null;
 };
 
-export default function ApplyLoanForm() {
+interface ApplyLoanFormProps {
+  userId: number | undefined;
+}
+
+export default function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
   const {
     step,
     isOpen,
@@ -60,11 +63,36 @@ export default function ApplyLoanForm() {
     defaultValues: formData,
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    updateFormData(data);
-    console.log("Form submitted:", { ...formData, ...data });
-    setIsSubmitted(true);
-    setStep(5);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const formData = new FormData();
+    formData.append("userId", userId?.toString() || "");
+    formData.append("amount", data.amount.toString());
+    formData.append("repaymentPeriod", data.repaymentPeriod.toString());
+    formData.append("titleDeedNumber", data.titleDeedNumber);
+    formData.append("propertyAddress", data.propertyAddress);
+    if (data.identificationDocument)
+      formData.append("identificationDocument", data.identificationDocument[0]);
+    if (data.powerOfAttorney)
+      formData.append("powerOfAttorney", data.powerOfAttorney[0]);
+    if (data.titleDeed) formData.append("titleDeed", data.titleDeed[0]);
+
+    try {
+      const response = await fetch("/api/submit-loan", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSubmitted(true);
+        setStep(5);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting loan application:", error);
+    }
   };
 
   const nextStep = () => {
@@ -91,10 +119,6 @@ export default function ApplyLoanForm() {
     { icon: FileText, title: "Documents" },
     { icon: ClipboardList, title: "Review" },
   ];
-
-  const user = userStore((state) => state.user);
-
-  console.log(user);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Banknote,
   CreditCard,
@@ -17,6 +20,42 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function LoanSummary() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({
+    totalLoans: "0",
+    activeLoans: "0",
+    totalAmount: "$0",
+    nextPaymentDue: "0 days",
+    repaidAmount: "$0",
+    totalLoanAmount: "$0",
+    remainingAmount: "$0",
+    progressValue: 0,
+    activeLoansSubtext: "0 active, 0 paid off",
+    personalLoansSubtext: "0 personal, 0 auto",
+    nextPaymentDueSubtext: "$0 due",
+    repaymentProgressSubtext: "0% of total loan amount repaid",
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setData({
+        totalLoans: "0",
+        activeLoans: "0",
+        totalAmount: "$0",
+        nextPaymentDue: "0 days",
+        repaidAmount: "$0",
+        totalLoanAmount: "$0",
+        remainingAmount: "$0",
+        progressValue: 0,
+        activeLoansSubtext: "0 active, 0 paid off",
+        personalLoansSubtext: "0 personal, 0 auto",
+        nextPaymentDueSubtext: "$0 due",
+        repaymentProgressSubtext: "0% of total loan amount repaid",
+      });
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <Card className="w-full bg-white">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -40,26 +79,30 @@ export default function LoanSummary() {
           <SummaryItem
             icon={<PieChart className="h-6 w-6 text-sky-500" />}
             label="Total Loans"
-            value="3"
-            subtext="2 active, 1 paid off"
+            value={loading ? null : data.totalLoans}
+            subtext={loading ? null : data.activeLoansSubtext} // Using activeLoansSubtext
+            loading={loading}
           />
           <SummaryItem
             icon={<CreditCard className="h-6 w-6 text-sky-500" />}
             label="Active Loans"
-            value="2"
-            subtext="1 personal, 1 auto"
+            value={loading ? null : data.activeLoans}
+            subtext={loading ? null : data.personalLoansSubtext} // Using personalLoansSubtext
+            loading={loading}
           />
           <SummaryItem
             icon={<Banknote className="h-6 w-6 text-sky-500" />}
             label="Total Amount"
-            value="$25,000"
-            subtext="$18,500 remaining"
+            value={loading ? null : data.totalAmount}
+            subtext={loading ? null : `${data.remainingAmount} remaining`}
+            loading={loading}
           />
           <SummaryItem
             icon={<Calendar className="h-6 w-6 text-sky-500" />}
             label="Next Payment Due"
-            value="15 days"
-            subtext="$500 due"
+            value={loading ? null : data.nextPaymentDue}
+            subtext={loading ? null : data.nextPaymentDueSubtext} // Using nextPaymentDueSubtext
+            loading={loading}
           />
         </div>
         <div className="mt-8 space-y-4">
@@ -67,17 +110,36 @@ export default function LoanSummary() {
             <h4 className="text-lg font-semibold text-sky-900">
               Repayment Progress
             </h4>
-            <span className="text-sm font-medium text-sky-700">
-              $6,500 / $25,000
-            </span>
+            {loading ? (
+              <Skeleton className="h-4 w-24" />
+            ) : (
+              <span className="text-sm font-medium text-sky-700">
+                {data.repaidAmount} / {data.totalLoanAmount}
+              </span>
+            )}
           </div>
-          <Progress value={26} className="h-2 w-full bg-sky-100" />
+          {loading ? (
+            <Skeleton className="h-2 w-full" />
+          ) : (
+            <Progress
+              value={data.progressValue}
+              className="h-2 w-full bg-sky-100"
+            />
+          )}
           <div className="flex items-center justify-between text-sm text-sky-700">
-            <span>26% of total loan amount repaid</span>
-            <span className="flex items-center">
-              <DollarSign className="h-4 w-4 mr-1 text-sky-500" />
-              18,500 remaining
-            </span>
+            {loading ? (
+              <Skeleton className="h-4 w-48" />
+            ) : (
+              <span>{data.repaymentProgressSubtext}</span> // Using repaymentProgressSubtext
+            )}
+            {loading ? (
+              <Skeleton className="h-4 w-36" />
+            ) : (
+              <span className="flex items-center">
+                <DollarSign className="h-4 w-4 mr-1 text-sky-500" />
+                {data.remainingAmount} remaining
+              </span>
+            )}
           </div>
         </div>
       </CardContent>
@@ -90,19 +152,29 @@ function SummaryItem({
   label,
   value,
   subtext,
+  loading,
 }: {
   icon: React.ReactNode;
   label: string;
-  value: string;
-  subtext: string;
+  value: string | null;
+  subtext: string | null;
+  loading: boolean;
 }) {
   return (
     <div className="flex items-center space-x-4 p-4 rounded-lg bg-white border border-sky-200">
       <div className="flex-shrink-0 p-2 bg-sky-100 rounded-full">{icon}</div>
       <div>
         <p className="text-sm font-medium text-sky-700">{label}</p>
-        <p className="text-2xl font-bold text-sky-900">{value}</p>
-        <p className="text-sm text-sky-700">{subtext}</p>
+        {loading ? (
+          <Skeleton className="h-8 w-24 mt-1" />
+        ) : (
+          <p className="text-2xl font-bold text-sky-900">{value}</p>
+        )}
+        {loading ? (
+          <Skeleton className="h-4 w-32 mt-1" />
+        ) : (
+          <p className="text-sm text-sky-700">{subtext}</p>
+        )}
       </div>
     </div>
   );

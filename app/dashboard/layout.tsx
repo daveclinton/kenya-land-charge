@@ -6,6 +6,7 @@ import { getSession } from "@/lib/session";
 import React from "react";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { userStore } from "@/lib/store/useStore";
 
 export default async function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default async function DashboardLayout({
     .select()
     .from(users)
     .where(eq(users.id, session.userId));
+  userStore.getState().setUser(user);
   return (
     <div className="flex flex-col h-screen bg-gray-100 lg:flex-row">
       <ClientInitializer userData={user} />

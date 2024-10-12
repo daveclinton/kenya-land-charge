@@ -1,19 +1,12 @@
-"use client";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import LoanApplicationForm from "@/components/LoanApplicationForm";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { userStore } from "@/lib/store/useStore";
+import { ApplyLoanForm } from "./ApplyLoan";
 
 export function QuickApplySection() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = userStore.getState().user;
 
+  console.log(user?.id);
+  console.log("Type", typeof user?.id);
   return (
     <Card className="bg-white">
       <CardContent className="p-6">
@@ -23,18 +16,7 @@ export function QuickApplySection() {
         <p className="mb-4 text-sky-700">
           Need a loan? Start your application process quickly and easily.
         </p>
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTitle className="text-sky-900">{""}</DialogTitle>
-          <DialogDescription className="text-sky-700">{""}</DialogDescription>
-          <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white">
-              Apply Now
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <LoanApplicationForm />
-          </DialogContent>
-        </Dialog>
+        <ApplyLoanForm userId={user?.id} />
       </CardContent>
     </Card>
   );

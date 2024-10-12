@@ -1,6 +1,6 @@
 "use server";
 
-import { formSumissions, users, UserSchema } from "../db/schema";
+import { users, UserSchema } from "../db/schema";
 import bcrypt from "bcryptjs";
 import { db } from "../db";
 import { revalidatePath } from "next/cache";
@@ -26,8 +26,6 @@ export async function createUser(
     email: formData.get("email"),
     password: formData.get("password"),
     fullName: formData.get("fullName"),
-    // phoneNumber: formData.get("phoneNumber"),
-    // dateOfBirth: formData.get("dateOfBirth"),
   });
 
   console.log("Validation Result:", validatedFields);
@@ -60,8 +58,6 @@ export async function createUser(
 
     if (existingUser.length > 0) {
       const existingField = "email";
-      // const existingField =
-      //   existingUser[0].email === email ? "email" : "phone number";
       return {
         errors: {
           [existingField]: [`User with this ${existingField} already exists`],
@@ -75,8 +71,6 @@ export async function createUser(
       email,
       password: hashedPassword,
       fullName,
-      // phoneNumber,
-      // dateOfBirth: dateOfBirth.toISOString().split("T")[0],
       emailConfirmed: false,
       confirmationToken: confirmationToken,
     });
@@ -151,41 +145,4 @@ export async function Login(prevState: ActionResult, formData: FormData) {
   session.isLoggedIn = true;
   await session.save();
   redirect("/dashboard");
-}
-
-type DocumentUrls = {
-  titleDeed?: string;
-  chargeDocument?: string;
-  personalInsurance?: string;
-  powerOfAttorney?: string;
-  identificationDocument?: string;
-};
-
-export async function createFormSubmission(
-  formData: any,
-  documentUrls: DocumentUrls
-) {
-  try {
-    const result = await db.insert(formSumissions).values({
-      fullName: formData.fullName,
-      email: formData.email,
-      address: formData.address,
-      titleNumber: formData.titleNumber,
-      propertyDescription: formData.propertyDescription,
-      principalAmount: formData.principalAmount,
-      principalAmountWords: formData.principalAmountWords,
-      interestRate: formData.interestRate,
-      repaymentDate: formData.repaymentDate,
-      titleDeedUrl: documentUrls.titleDeed,
-      chargeDocumentUrl: documentUrls.chargeDocument,
-      personalInsuranceUrl: documentUrls.personalInsurance,
-      powerOfAttorneyUrl: documentUrls.powerOfAttorney,
-      identificationDocumentUrl: documentUrls.identificationDocument,
-    });
-
-    return { success: true, data: result };
-  } catch (error) {
-    console.error("Database insertion failed:", error);
-    return { success: false, error: "Failed to save form submission" };
-  }
 }

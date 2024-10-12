@@ -115,7 +115,7 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
 
   const steps = [
     { icon: CreditCard, title: "Loan Details" },
-    { icon: Home, title: "Property Details" },
+    { icon: Home, title: "Property" },
     { icon: FileText, title: "Documents" },
     { icon: ClipboardList, title: "Review" },
   ];
@@ -165,13 +165,13 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
           </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Card className="border-sky-200 shadow-lg">
+          <Card className="border-sky-200 shadow-lg w-full max-w-2xl mx-auto overflow-scroll">
             <CardHeader>
               <CardTitle className="text-xl font-semibold text-sky-700">
                 {isSubmitted ? "Application Submitted" : steps[step - 1].title}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-6 overflow-y-auto h-64 md:h-auto">
               {step === 1 && (
                 <div className="space-y-4">
                   <div>
@@ -313,50 +313,51 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
               )}
               {step === 4 && (
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-sky-700">
+                  <h3 className="font-semibold text-sky-700 text-lg sm:text-xl">
                     Review Your Information
                   </h3>
-                  <div className="space-y-2">
-                    <div className="bg-sky-50 p-3 rounded-md">
-                      <h4 className="font-semibold text-sky-700">
-                        Loan Details
-                      </h4>
-                      <p className="text-sky-600">
-                        Loan Amount: ${formData.amount}
-                      </p>
-                      <p className="text-sky-600">
-                        Repayment Period: {formData.repaymentPeriod} months
-                      </p>
-                    </div>
-                    <div className="bg-sky-50 p-3 rounded-md">
-                      <h4 className="font-semibold text-sky-700">
-                        Property Details
-                      </h4>
-                      <p className="text-sky-600">
-                        Title Deed Number: {formData.titleDeedNumber}
-                      </p>
-                      <p className="text-sky-600">
-                        Property Address: {formData.propertyAddress}
-                      </p>
-                    </div>
-                    <div className="bg-sky-50 p-3 rounded-md">
-                      <h4 className="font-semibold text-sky-700">
-                        Uploaded Documents
-                      </h4>
-                      <p className="text-sky-600">
-                        Identification Document:{" "}
-                        {formData.identificationDocument?.[0]?.name ||
-                          "Not uploaded"}
-                      </p>
-                      <p className="text-sky-600">
-                        Power of Attorney:{" "}
-                        {formData.powerOfAttorney?.[0]?.name || "Not uploaded"}
-                      </p>
-                      <p className="text-sky-600">
-                        Title Deed:{" "}
-                        {formData.titleDeed?.[0]?.name || "Not uploaded"}
-                      </p>
-                    </div>
+                  <div className="space-y-4">
+                    <ReviewSection title="Loan Details">
+                      <ReviewItem
+                        label="Loan Amount"
+                        value={`$${formData.amount}`}
+                      />
+                      <ReviewItem
+                        label="Repayment Period"
+                        value={`${formData.repaymentPeriod} months`}
+                      />
+                    </ReviewSection>
+
+                    <ReviewSection title="Property Details">
+                      <ReviewItem
+                        label="Title Deed Number"
+                        value={formData.titleDeedNumber}
+                      />
+                      <ReviewItem
+                        label="Property Address"
+                        value={formData.propertyAddress}
+                      />
+                    </ReviewSection>
+
+                    <ReviewSection title="Uploaded Documents">
+                      <ReviewItem
+                        label="Identification Document"
+                        value={
+                          formData.identificationDocument?.[0]?.name ||
+                          "Not uploaded"
+                        }
+                      />
+                      <ReviewItem
+                        label="Power of Attorney"
+                        value={
+                          formData.powerOfAttorney?.[0]?.name || "Not uploaded"
+                        }
+                      />
+                      <ReviewItem
+                        label="Title Deed"
+                        value={formData.titleDeed?.[0]?.name || "Not uploaded"}
+                      />
+                    </ReviewSection>
                   </div>
                 </div>
               )}
@@ -409,5 +410,25 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ReviewSection({ title, children }: any) {
+  return (
+    <div className="bg-sky-50 p-3 sm:p-4 rounded-md">
+      <h4 className="font-semibold text-sky-700 text-sm sm:text-base mb-2">
+        {title}
+      </h4>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function ReviewItem({ label, value }: any) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:justify-between">
+      <span className="text-sky-600 text-sm">{label}:</span>
+      <span className="text-sky-800 font-medium text-sm">{value}</span>
+    </div>
   );
 }

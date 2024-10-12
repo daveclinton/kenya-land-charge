@@ -35,7 +35,7 @@ function ConfirmEmailContent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-sky-50 to-sky-200 p-4">
       <Card className="w-full max-w-md border border-sky-200">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">

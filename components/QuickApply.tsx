@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-
-import ApplyLoanForm from "./ApplyLoan";
 import { userStore } from "@/lib/store/useStore";
+import { ApplyLoanForm } from "./ApplyLoan";
 
 export function QuickApplySection() {
   const user = userStore.getState().user;

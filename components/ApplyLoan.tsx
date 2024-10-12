@@ -43,7 +43,7 @@ interface ApplyLoanFormProps {
   userId: number | undefined;
 }
 
-export default function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
+export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
   const {
     step,
     isOpen,

@@ -6,13 +6,7 @@ import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 import { db } from "@/lib/db";
-import {
-  documents,
-  loans,
-  NewLoan,
-  NewPropertyDetail,
-  propertyDetails,
-} from "@/lib/db/schema";
+import { documents, loans, propertyDetails } from "@/lib/db/schema";
 
 export const config = {
   api: {

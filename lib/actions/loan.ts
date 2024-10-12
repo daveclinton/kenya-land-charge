@@ -41,7 +41,6 @@ export async function handleLoanApplication(
     const [loanRecord] = await db
       .insert(loans)
       .values({
-        id: undefined as any,
         userId: BigInt(userId) as any,
         amount: data.amount.toString(),
         repaymentPeriod: data.repaymentPeriod,
@@ -54,7 +53,6 @@ export async function handleLoanApplication(
     }
 
     await db.insert(propertyDetails).values({
-      id: undefined as any,
       loanId: loanRecord.id,
       titleDeedNumber: data.titleDeedNumber,
       propertyAddress: data.propertyAddress,
@@ -98,7 +96,6 @@ export async function handleLoanApplication(
     }
 
     await db.insert(documents).values({
-      id: undefined as any,
       loanId: loanRecord.id,
       ...documentLinks,
     });

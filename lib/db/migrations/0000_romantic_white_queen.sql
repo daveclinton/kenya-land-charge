@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "documents" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"loan_id" bigint,
 	"identification_document_link" text,
 	"power_of_attorney_link" text,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "documents" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "loans" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"user_id" bigint,
 	"amount" numeric NOT NULL,
 	"repayment_period" integer NOT NULL,
@@ -29,21 +29,21 @@ CREATE TABLE IF NOT EXISTS "personal_info" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "property_details" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"loan_id" bigint,
 	"title_deed_number" text NOT NULL,
 	"property_address" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "repayments" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"loan_id" bigint,
 	"amount" numeric NOT NULL,
 	"payment_date" timestamp with time zone DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
-	"id" bigint PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"email" text NOT NULL,
 	"password" text NOT NULL,
 	"full_name" varchar(255) NOT NULL,

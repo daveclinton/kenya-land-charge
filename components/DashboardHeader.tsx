@@ -3,6 +3,7 @@ import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export function DashboardHeader({
   user,
@@ -12,7 +13,9 @@ export function DashboardHeader({
   return (
     <header className="bg-white sticky p-5 top-0 z-50 mb-5 rounded-md w-full border-b border-sky-200">
       <div className="container flex h-10 items-center justify-between">
-        <h1 className="text-xl font-semibold text-sky-900">Dashboard</h1>
+        <h1 className="text-xl font-semibold text-sky-900">
+          Kiathagana Dashboard
+        </h1>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5 text-sky-500" />
@@ -39,25 +42,42 @@ export function DashboardHeader({
               Welcome Back, {user.fullName}
             </h2>
           </div>
-          <Tabs
-            defaultValue="overview"
-            className="hidden lg:block w-full lg:w-auto"
-          >
-            <TabsList>
-              <TabsTrigger value="overview" className="text-sky-700">
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="applications" className="text-sky-700">
-                Applications
-              </TabsTrigger>
-              <TabsTrigger value="payments" className="text-sky-700">
-                Payments
-              </TabsTrigger>
-              <TabsTrigger value="profile" className="text-sky-700">
-                Profile
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <nav className="hidden lg:block w-full lg:w-auto">
+            <ul className="flex space-x-4">
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="text-sky-700 hover:underline"
+                >
+                  Overview
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="dashboard/applications"
+                  className="text-sky-700 hover:underline"
+                >
+                  Applications
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="dashboard/payments"
+                  className="text-sky-700 hover:underline"
+                >
+                  Payments
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="dashboard/profile"
+                  className="text-sky-700 hover:underline"
+                >
+                  Profile
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </header>

@@ -20,7 +20,11 @@ import Link from "next/link";
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
+    <Button
+      type="submit"
+      className="w-full bg-sky-500 hover:bg-sky-600 text-white"
+      disabled={pending}
+    >
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -57,10 +61,12 @@ const SignUpForm = () => {
   }, [state, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-r from-sky-50 to-sky-200 flex items-center justify-center p-4">
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Create an Account</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Create an Account
+          </CardTitle>
           <CardDescription>
             Sign up to get started with our service.
           </CardDescription>
@@ -94,8 +100,8 @@ const SignUpForm = () => {
             </div>
             <SubmitButton />
             <div className="text-sm text-center text-gray-500">
-              Already have an account?
-              <Link href="/login" className="text-primary hover:underline">
+              Already have an account?{" "}
+              <Link href="/login" className="text-sky-500 hover:underline">
                 Login
               </Link>
             </div>

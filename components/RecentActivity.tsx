@@ -37,9 +37,9 @@ export function RecentLoanActivity() {
         <CardTitle className="text-2xl font-bold">
           Recent Loan Activity
         </CardTitle>
-        <Button variant="ghost" className="text-sm font-medium">
+        <Button variant="ghost" className="text-sm font-medium text-sky-500">
           View All
-          <ChevronRight className="ml-1 h-4 w-4" />
+          <ChevronRight className="ml-1 h-4 w-4 text-sky-500" />
         </Button>
       </CardHeader>
       <CardContent>
@@ -50,7 +50,7 @@ export function RecentLoanActivity() {
               className="flex items-center justify-between py-4 border-b last:border-b-0"
             >
               <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-lg">
                   {activity.icon}
                 </div>
                 <div>
@@ -62,7 +62,7 @@ export function RecentLoanActivity() {
               </div>
               <div className="text-right">
                 <p className="font-medium flex items-center justify-end">
-                  <DollarSign className="h-4 w-4 mr-1" />
+                  <DollarSign className="h-4 w-4 mr-1 text-sky-500" />
                   {activity.amount.toLocaleString()}
                 </p>
                 <Badge
@@ -90,13 +90,22 @@ export function MobileNavigation() {
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 border-t border-border z-50">
       <div className="container flex items-center justify-around h-16">
-        <NavButton icon={<Home className="h-5 w-5" />} label="Home" />
         <NavButton
-          icon={<MessageSquare className="h-5 w-5" />}
+          icon={<Home className="h-5 w-5 text-sky-500" />}
+          label="Home"
+        />
+        <NavButton
+          icon={<MessageSquare className="h-5 w-5 text-sky-500" />}
           label="Messages"
         />
-        <NavButton icon={<BarChart2 className="h-5 w-5" />} label="Analytics" />
-        <NavButton icon={<Settings className="h-5 w-5" />} label="Settings" />
+        <NavButton
+          icon={<BarChart2 className="h-5 w-5 text-sky-500" />}
+          label="Analytics"
+        />
+        <NavButton
+          icon={<Settings className="h-5 w-5 text-sky-500" />}
+          label="Settings"
+        />
       </div>
     </nav>
   );

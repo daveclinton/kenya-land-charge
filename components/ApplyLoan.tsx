@@ -81,14 +81,14 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
         method: "POST",
         body: formData,
       });
-
-      const result = await response.json();
-
-      if (result.success) {
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Loan created successfully:", data);
         setIsSubmitted(true);
         setStep(5);
       } else {
-        console.error(result.message);
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
       }
     } catch (error) {
       console.error("Error submitting loan application:", error);

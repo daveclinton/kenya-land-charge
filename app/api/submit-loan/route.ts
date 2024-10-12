@@ -1,18 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
-
+import { NextRequest, NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import formidable from "formidable";
-import fs from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { db } from "@/lib/db";
-import { documents, loans, propertyDetails } from "@/lib/db/schema";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+import { documents, loans, propertyDetails, users } from "@/lib/db/schema";
+import crypto from "crypto";
+import { eq } from "drizzle-orm";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
@@ -22,16 +13,18 @@ const s3Client = new S3Client({
   },
 });
 
-async function uploadFileToS3(file: formidable.File): Promise<string> {
-  const fileContent = await fs.readFile(file.filepath);
-  const fileExtension = path.extname(file.originalFilename || "");
-  const uniqueFilename = `${crypto.randomUUID()}${fileExtension}`;
+async function uploadFileToS3(file: File): Promise<string> {
+  const fileExtension = file.name.split(".").pop();
+  const uniqueFilename = `${crypto.randomUUID()}.${fileExtension}`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
   const params = {
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: uniqueFilename,
-    Body: fileContent,
-    ContentType: file.mimetype || "application/octet-stream",
+    Body: buffer,
+    ContentType: file.type,
   };
 
   await s3Client.send(new PutObjectCommand(params));
@@ -39,79 +32,82 @@ async function uploadFileToS3(file: formidable.File): Promise<string> {
   return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFilename}`;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
 
-  const form = formidable();
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error("Error parsing form:", err);
-      return res.status(500).json({ message: "Error processing form data" });
+    const userId = Number(formData.get("userId"));
+    console.log(userId);
+    if (!userId || isNaN(userId)) {
+      return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
     }
 
-    try {
-      const userId = Number(fields.userId);
-      const amount = Number(fields.amount);
-      const repaymentPeriod = Number(fields.repaymentPeriod);
-      const titleDeedNumber = fields.titleDeedNumber;
-      const propertyAddress = fields.propertyAddress;
+    // Verify that the user exists
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, userId),
+    });
 
-      const uploadFile = async (
-        file: formidable.File | formidable.File[] | undefined
-      ) => {
-        if (!file || Array.isArray(file)) return null;
-        return await uploadFileToS3(file);
-      };
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
 
-      const identificationDocumentLink = await uploadFile(
-        files.identificationDocument
-      );
-      const powerOfAttorneyLink = await uploadFile(files.powerOfAttorney);
-      const titleDeedLink = await uploadFile(files.titleDeed);
+    const amount = Number(formData.get("amount"));
+    const repaymentPeriod = Number(formData.get("repaymentPeriod"));
+    const titleDeedNumber = formData.get("titleDeedNumber") as string;
+    const propertyAddress = formData.get("propertyAddress") as string;
+    const uploadFile = async (fileKey: string) => {
+      const file = formData.get(fileKey) as File | null;
+      return file ? await uploadFileToS3(file) : null;
+    };
 
-      const newLoan = await db.transaction(async (tx) => {
-        const loanData: any = {
+    const identificationDocumentLink = await uploadFile(
+      "identificationDocument"
+    );
+    const powerOfAttorneyLink = await uploadFile("powerOfAttorney");
+    const titleDeedLink = await uploadFile("titleDeed");
+
+    const newLoan = await db.transaction(async (tx) => {
+      const [loan] = await tx
+        .insert(loans)
+        .values({
           userId,
           amount,
           repaymentPeriod,
           status: "PENDING",
-        };
-        const [loan] = await tx.insert(loans).values(loanData).returning();
+        } as any)
+        .returning();
 
-        const propertyData: any = {
-          loanId: loan.id,
-          titleDeedNumber,
-          propertyAddress,
-        };
-
-        await tx.insert(propertyDetails).values(propertyData);
-
-        await tx.insert(documents).values({
-          loanId: loan.id,
-          identificationDocumentLink,
-          powerOfAttorneyLink,
-          titleDeedLink,
-        });
-
-        return await tx.query.loans.findFirst({
-          where: (loans, { eq }) => eq(loans.id, loan.id),
-          with: {
-            propertyDetails: true,
-            documents: true,
-          },
-        });
+      await tx.insert(propertyDetails).values({
+        loanId: loan.id,
+        titleDeedNumber,
+        propertyAddress,
       });
 
-      res.status(201).json(newLoan);
-    } catch (error) {
-      console.error("Error creating loan:", error);
-      res.status(500).json({ message: "Error creating loan" });
-    }
-  });
+      await tx.insert(documents).values({
+        loanId: loan.id,
+        identificationDocumentLink,
+        powerOfAttorneyLink,
+        titleDeedLink,
+      });
+
+      return loan;
+    });
+
+    // Fetch the complete loan data with relations
+    const completeLoan = await db.query.loans.findFirst({
+      where: eq(loans.id, newLoan.id),
+      with: {
+        propertyDetails: true,
+        documents: true,
+      },
+    });
+
+    return NextResponse.json(completeLoan, { status: 201 });
+  } catch (error) {
+    console.error("Error creating loan:", error);
+    return NextResponse.json(
+      { message: "Error creating loan", error: String(error) },
+      { status: 500 }
+    );
+  }
 }

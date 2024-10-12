@@ -4,6 +4,9 @@ import { ApplyLoanForm } from "./ApplyLoan";
 
 export function QuickApplySection() {
   const user = userStore.getState().user;
+
+  console.log(user?.id);
+  console.log("Type", typeof user?.id);
   return (
     <Card className="bg-white">
       <CardContent className="p-6">

@@ -1,5 +1,5 @@
 {
-  "id": "3cc6ddf5-bcb9-49f1-96b3-cafbdecc8925",
+  "id": "ee557b61-3463-4430-bc57-60a9a594ead1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,15 +10,26 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "documents_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "5000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "loan_id": {
           "name": "loan_id",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "identification_document_link": {
           "name": "identification_document_link",
@@ -71,19 +82,30 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "loans_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "2000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "user_id": {
           "name": "user_id",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "amount": {
           "name": "amount",
-          "type": "numeric",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": true
         },
@@ -95,13 +117,13 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
         },
-        "submitted_at": {
-          "name": "submitted_at",
-          "type": "timestamp with time zone",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -144,9 +166,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "personal_info_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "2000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "user_id": {
           "name": "user_id",
@@ -210,19 +243,30 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "property_details_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "4000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "loan_id": {
           "name": "loan_id",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "title_deed_number": {
           "name": "title_deed_number",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -258,9 +302,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "repayments_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "6000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "loan_id": {
           "name": "loan_id",
@@ -307,9 +362,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "users_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1000",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "email": {
           "name": "email",

@@ -30,7 +30,7 @@ export default async function Dashboard() {
         </div>
         <RecentLoanActivity />
       </main>
-      {/* Bottom Navigation for mobile */}
+
       <MobileNavigation />
     </div>
   );

@@ -88,7 +88,7 @@ export function RecentLoanActivity() {
 
 export function MobileNavigation() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 border-t border-sky-200 z-50">
+    <nav className="lg:hidden fixed bottom-0 bg-white w-full left-0 right-0 border-t border-sky-200 z-50">
       <div className="container flex items-center justify-around h-16 bg-white">
         <NavButton
           icon={<Home className="h-5 w-5 text-sky-500" />}

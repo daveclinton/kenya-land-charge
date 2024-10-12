@@ -9,7 +9,7 @@ console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 const sql = postgres(process.env.DATABASE_URL!, {
   max: 1,
-  ssl: true,
+  ssl: false,
   onnotice: (notice) => console.log("Database Notice:", notice),
   onparameter: (parameterStatus) =>
     console.log("Parameter Status:", parameterStatus),

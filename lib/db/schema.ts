@@ -6,9 +6,9 @@ import {
   timestamp,
   varchar,
   boolean,
+  integer,
   bigint,
   numeric,
-  integer,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
@@ -17,6 +17,8 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: varchar("full_name", { length: 255 }).notNull(),
+  // phoneNumber: text("phone_number").unique(),
+  // dateOfBirth: date("date_of_birth", { mode: "string" }),
   createdAt: timestamp("created_at").defaultNow(),
   emailConfirmed: boolean("email_confirmed").notNull().default(false),
   confirmationToken: varchar("confirmation_token", { length: 64 }),
@@ -34,11 +36,20 @@ export const UserSchema = z.object({
       message:
         "Full name can only contain letters, spaces, apostrophes, and hyphens.",
     }),
+  // phoneNumber: z.string(),
+  // dateOfBirth: z
+  //   .string()
+  //   .refine((date) => {
+  //     const birthDate = new Date(date);
+  //     const today = new Date();
+  //     return birthDate <= today;
+  //   }, "Date of birth cannot be in the future")
+  //   .transform((str) => new Date(str)),
 });
 
 export type User = typeof users.$inferSelect;
 
-//Personal Info Table
+// Personal Info Table
 
 export const personalInfo = pgTable("personal_info", {
   id: bigint("id", { mode: "number" }).primaryKey().notNull(),

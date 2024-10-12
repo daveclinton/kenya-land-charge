@@ -35,8 +35,8 @@ function ConfirmEmailContent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-sky-50 to-sky-200 p-4">
+      <Card className="w-full max-w-md border border-sky-200">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Email Confirmation
@@ -49,10 +49,10 @@ function ConfirmEmailContent() {
             variants={iconVariants}
           >
             {status === "loading" && (
-              <Loader2 className="w-16 h-16 text-primary animate-spin" />
+              <Loader2 className="w-16 h-16 text-sky-500 animate-spin" />
             )}
             {status === "success" && (
-              <CheckCircle className="w-16 h-16 text-green-500" />
+              <CheckCircle className="w-16 h-16 text-sky-500" />
             )}
             {status === "error" && (
               <XCircle className="w-16 h-16 text-red-500" />
@@ -64,7 +64,7 @@ function ConfirmEmailContent() {
           {status !== "loading" && (
             <Link
               href="/login"
-              className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+              className="mt-4 px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600 transition-colors"
             >
               Proceed to login
             </Link>
@@ -79,7 +79,7 @@ export default function ConfirmEmail() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 p-4">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-sky-100 to-sky-200 p-4">
           <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
@@ -87,7 +87,7 @@ export default function ConfirmEmail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-4">
-              <Loader2 className="w-16 h-16 text-primary animate-spin" />
+              <Loader2 className="w-16 h-16 text-sky-500 animate-spin" />
               <p className="text-xl text-center">Loading...</p>
             </CardContent>
           </Card>

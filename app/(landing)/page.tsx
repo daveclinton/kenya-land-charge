@@ -22,7 +22,7 @@ export default function HomePage() {
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
                 <Link
                   href="/login"
-                  className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-lg px-8 py-4 inline-flex items-center justify-center"
+                  className="bg-sky-500 hover:bg-sky-600 text-white rounded-full text-lg px-8 py-4 inline-flex items-center justify-center"
                 >
                   Start Here
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -97,7 +97,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 ">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
@@ -113,7 +113,7 @@ export default function HomePage() {
             <div className="mt-8 lg:mt-0 flex justify-center lg:justify-end">
               <Link
                 href="/signup"
-                className="bg-white hover:bg-gray-100 text-black border border-gray-200 rounded-full text-xl px-12 py-6 inline-flex items-center justify-center"
+                className="bg-sky-500 hover:bg-sky-600 text-white rounded-full text-xl px-12 py-6 inline-flex items-center justify-center"
               >
                 Register
                 <ArrowRight className="ml-3 h-6 w-6" />

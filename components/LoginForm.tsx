@@ -23,11 +23,15 @@ const initialState = {
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
+    <Button
+      type="submit"
+      className="w-full bg-sky-500 hover:bg-sky-600 text-white"
+      disabled={pending}
+    >
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Loggin In
+          Logging In
         </>
       ) : (
         "Login"
@@ -41,7 +45,7 @@ export default function LoginForm() {
   const [state, formAction] = useFormState(Login as any, initialState);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-slate-50 to-slate-300 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-r from-sky-50 to-sky-200 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <form action={formAction}>
           <CardHeader className="space-y-1">
@@ -92,9 +96,9 @@ export default function LoginForm() {
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    <EyeOffIcon className="h-4 w-4 text-gray-500" />
+                    <EyeOffIcon className="h-4 w-4 text-sky-500" />
                   ) : (
-                    <EyeIcon className="h-4 w-4 text-gray-500" />
+                    <EyeIcon className="h-4 w-4 text-sky-500" />
                   )}
                 </Button>
               </div>
@@ -104,7 +108,7 @@ export default function LoginForm() {
             <SubmitButton />
             <div className="text-sm text-center text-gray-500">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:underline">
+              <Link href="/signup" className="text-sky-500 hover:underline">
                 Create an account
               </Link>
             </div>

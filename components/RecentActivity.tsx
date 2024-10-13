@@ -12,53 +12,73 @@ import {
   BanknoteIcon,
   CreditCardIcon,
   AlertCircle,
+  RefreshCw,
+  CheckCircle,
+  FileText,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function RecentLoanActivity() {
-  const [activities, setActivities] = useState<Array<{
-    type: string;
-    amount: number;
-    status: string;
-    icon: string;
-  }> | null>(null);
+interface Activity {
+  id: number;
+  type: string;
+  amount: number;
+  status: "PENDING" | "APPROVED" | "DISBURSED" | "COMPLETED";
+  createdAt: string;
+}
+
+export function RecentLoanActivity({ userId }: { userId: any }) {
+  const [activities, setActivities] = useState<Activity[] | null>(null);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const fetchedActivities: React.SetStateAction<
-        { type: string; amount: number; status: string; icon: string }[] | null
-      > = [
-        // {
-        //   type: "Application Submitted",
-        //   amount: 15000,
-        //   status: "Pending",
-        //   icon: "📝",
-        // },
-        // {
-        //   type: "Loan Approved",
-        //   amount: 50000,
-        //   status: "Approved",
-        //   icon: "✅",
-        // },
-        // { type: "Payment Made", amount: 1200, status: "Completed", icon: "💰" },
-        // {
-        //   type: "Application Rejected",
-        //   amount: 75000,
-        //   status: "Rejected",
-        //   icon: "❌",
-        // },
-        // {
-        //   type: "Loan Disbursed",
-        //   amount: 30000,
-        //   status: "Completed",
-        //   icon: "🏦",
-        // },
-      ];
-      setActivities(fetchedActivities);
-    }, 1000);
-  }, []);
+    const fetchActivities = async () => {
+      try {
+        const response = await fetch(
+          `/api/recent-transactions?userId=${userId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch activities");
+        }
+        const data = await response.json();
+        setActivities(data);
+      } catch (error) {
+        console.error("Error fetching activities:", error);
+        setActivities([]);
+      }
+    };
+
+    fetchActivities();
+  }, [userId]);
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case "Application Submitted":
+        return <FileText className="h-6 w-6 text-sky-500" />;
+      case "Loan Approved":
+        return <CheckCircle className="h-6 w-6 text-green-500" />;
+      case "Loan Disbursed":
+        return <BanknoteIcon className="h-6 w-6 text-blue-500" />;
+      case "Payment Made":
+        return <CreditCardIcon className="h-6 w-6 text-purple-500" />;
+      default:
+        return <RefreshCw className="h-6 w-6 text-gray-500" />;
+    }
+  };
+
+  const getStatusColor = (status: Activity["status"]) => {
+    switch (status) {
+      case "PENDING":
+        return "bg-yellow-100 text-yellow-800";
+      case "APPROVED":
+        return "bg-green-100 text-green-800";
+      case "DISBURSED":
+        return "bg-blue-100 text-blue-800";
+      case "COMPLETED":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Card className="w-full bg-white mb-5">
@@ -82,23 +102,24 @@ export function RecentLoanActivity() {
               <AlertCircle className="h-12 w-12 mb-4 text-sky-500" />
               <p className="text-lg font-medium">No Recent Activity</p>
               <p className="text-sm text-center mt-2">
-                There hasn't been any loan activity. Apply for a loan
+                There hasn't been any loan activity. Apply for a loan to get
+                started.
               </p>
             </div>
           ) : (
-            activities.map((activity, index) => (
+            activities.map((activity) => (
               <div
-                key={index}
+                key={activity.id}
                 className="flex items-center justify-between py-4 border-b last:border-b-0"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-lg">
-                    {activity.icon}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center">
+                    {getIcon(activity.type)}
                   </div>
                   <div>
                     <p className="font-medium text-sky-900">{activity.type}</p>
                     <p className="text-sm text-sky-700">
-                      {new Date().toLocaleDateString()}
+                      {new Date(activity.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -107,16 +128,7 @@ export function RecentLoanActivity() {
                     <DollarSign className="h-4 w-4 mr-1 text-sky-500" />
                     {activity.amount.toLocaleString()}
                   </p>
-                  <Badge
-                    variant={
-                      activity.status === "Approved" ||
-                      activity.status === "Completed"
-                        ? "default"
-                        : activity.status === "Rejected"
-                        ? "destructive"
-                        : "secondary"
-                    }
-                  >
+                  <Badge className={`${getStatusColor(activity.status)}`}>
                     {activity.status}
                   </Badge>
                 </div>

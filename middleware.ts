@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   if (
     (!session || !session.isLoggedIn) &&
     (request.nextUrl.pathname.startsWith("/dashboard") ||
-      request.nextUrl.pathname.startsWith("/admin"))
+      request.nextUrl.pathname.startsWith("/admin-dashboard"))
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -16,5 +16,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/admin-dashboard/:path*"],
 };

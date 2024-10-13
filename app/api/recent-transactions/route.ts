@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
           WHEN ${loans.status} = 'PENDING' THEN 'Application Submitted'
           WHEN ${loans.status} = 'APPROVED' THEN 'Loan Approved'
           WHEN ${loans.status} = 'DISBURSED' THEN 'Loan Disbursed'
+          WHEN ${loans.status} = 'REJECTED' THEN 'Loan Rejected'
           ELSE 'Loan Updated'
         END`.as("type"),
         amount: loans.amount,

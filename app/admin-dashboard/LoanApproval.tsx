@@ -17,10 +17,10 @@ import { Loader2, CheckCircle, DollarSign } from "lucide-react";
 interface Loan {
   id: number;
   userId: number;
-  userFullName: string;
+  userName: string;
   amount: number | string;
   repaymentPeriod: string;
-  status: "PENDING" | "APPROVED" | "DISBURSED";
+  status: "PENDING" | "APPROVED" | "DISBURSED" | "REJECTED";
   createdAt: string;
 }
 
@@ -80,6 +80,23 @@ export default function LoanApprovalDashboard() {
     }
   };
 
+  const handleReject = async (loanId: number) => {
+    try {
+      const response = await fetch(`/api/loans/${loanId}/reject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to reject loan");
+      alert("Loan rejected successfully");
+      fetchLoans();
+    } catch (error) {
+      console.error("Error rejecting loan:", error);
+      alert("Failed to reject loan");
+    }
+  };
+
   const getStatusBadge = (status: Loan["status"]) => {
     switch (status) {
       case "PENDING":
@@ -88,6 +105,8 @@ export default function LoanApprovalDashboard() {
         return <Badge variant="outline">Approved</Badge>;
       case "DISBURSED":
         return <Badge variant="default">Disbursed</Badge>;
+      case "REJECTED":
+        return <Badge variant="destructive">Rejected</Badge>;
       default:
         return null;
     }
@@ -95,14 +114,14 @@ export default function LoanApprovalDashboard() {
 
   const formatAmount = (amount: number | string) => {
     const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
-    return isNaN(numAmount) ? "Invalid Amount" : `KES ${numAmount.toFixed(2)}`;
+    return isNaN(numAmount) ? "Invalid Amount" : `$${numAmount.toFixed(2)}`;
   };
 
   return (
-    <Card className="w-full mx-auto">
+    <Card className="w-full  mx-auto">
       <CardHeader>
         <h2 className="text-3xl font-bold text-center">
-          Loan Management Dashboard
+          Loan Approval Dashboard
         </h2>
       </CardHeader>
       <CardContent>
@@ -115,10 +134,12 @@ export default function LoanApprovalDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[100px]">Loan ID</TableHead>
+                  <TableHead>User ID</TableHead>
                   <TableHead className="hidden sm:table-cell">
-                    Customer Name
+                    User Name
                   </TableHead>
-                  <TableHead>Requested Amount</TableHead>
+                  <TableHead>Amount</TableHead>
                   <TableHead>Repayment Period</TableHead>
                   <TableHead className="hidden md:table-cell">Status</TableHead>
                   <TableHead className="hidden lg:table-cell">
@@ -130,11 +151,13 @@ export default function LoanApprovalDashboard() {
               <TableBody>
                 {loans.map((loan) => (
                   <TableRow key={loan.id}>
+                    <TableCell className="font-medium">{loan.id}</TableCell>
+                    <TableCell>{loan.userId}</TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {loan.userFullName}
+                      {loan.userName}
                     </TableCell>
                     <TableCell>{formatAmount(loan.amount)}</TableCell>
-                    <TableCell>{loan.repaymentPeriod} months</TableCell>
+                    <TableCell>{loan.repaymentPeriod}</TableCell>
                     <TableCell className="hidden md:table-cell">
                       {getStatusBadge(loan.status)}
                     </TableCell>
@@ -143,13 +166,23 @@ export default function LoanApprovalDashboard() {
                     </TableCell>
                     <TableCell>
                       {loan.status === "PENDING" && (
-                        <Button
-                          size="sm"
-                          onClick={() => handleApprove(loan.id)}
-                        >
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          Approve
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            onClick={() => handleApprove(loan.id)}
+                            className="mr-2"
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleReject(loan.id)}
+                          >
+                            Reject
+                          </Button>
+                        </>
                       )}
                       {loan.status === "APPROVED" && (
                         <Button

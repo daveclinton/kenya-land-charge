@@ -15,6 +15,7 @@ import {
   RefreshCw,
   CheckCircle,
   FileText,
+  Frown,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -23,7 +24,7 @@ interface Activity {
   id: number;
   type: string;
   amount: number;
-  status: "PENDING" | "APPROVED" | "DISBURSED" | "COMPLETED";
+  status: "PENDING" | "APPROVED" | "DISBURSED" | "COMPLETED" | "REJECTED";
   createdAt: string;
 }
 
@@ -60,6 +61,8 @@ export function RecentLoanActivity({ userId }: { userId: any }) {
         return <BanknoteIcon className="h-6 w-6 text-blue-500" />;
       case "Payment Made":
         return <CreditCardIcon className="h-6 w-6 text-purple-500" />;
+      case "Loan Rejected":
+        return <Frown className="h-6 w-6 text-yellow-300" />;
       default:
         return <RefreshCw className="h-6 w-6 text-gray-500" />;
     }
@@ -73,6 +76,8 @@ export function RecentLoanActivity({ userId }: { userId: any }) {
         return "bg-green-100 text-green-800";
       case "DISBURSED":
         return "bg-blue-100 text-blue-800";
+      case "REJECTED":
+        return "bg-red-100 text-red-800";
       case "COMPLETED":
         return "bg-purple-100 text-purple-800";
       default:

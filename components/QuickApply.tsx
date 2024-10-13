@@ -1,12 +1,12 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { userStore } from "@/lib/store/useStore";
 import { ApplyLoanForm } from "./ApplyLoan";
 
 export function QuickApplySection() {
-  const user = userStore.getState().user;
+  const user = userStore((state) => state.user);
 
-  console.log(user?.id);
-  console.log("Type", typeof user?.id);
+  console.log("User ID", user?.id);
   return (
     <Card className="bg-white">
       <CardContent className="p-6">

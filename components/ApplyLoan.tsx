@@ -44,6 +44,7 @@ interface ApplyLoanFormProps {
 }
 
 export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
+  console.log("User ID", userId);
   const {
     step,
     isOpen,

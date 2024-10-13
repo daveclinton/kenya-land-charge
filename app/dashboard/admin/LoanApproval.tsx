@@ -102,7 +102,7 @@ export default function LoanApprovalDashboard() {
     <Card className="w-full mx-auto">
       <CardHeader>
         <h2 className="text-3xl font-bold text-center">
-          Loan Approval Dashboard
+          Loan Management Dashboard
         </h2>
       </CardHeader>
       <CardContent>

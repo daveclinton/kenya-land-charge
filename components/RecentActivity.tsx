@@ -28,11 +28,17 @@ interface Activity {
   createdAt: string;
 }
 
-export function RecentLoanActivity({ userId }: { userId: any }) {
+export function RecentLoanActivity({ userId }: { userId?: number }) {
   const [activities, setActivities] = useState<Activity[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchActivities = async () => {
+      if (userId === undefined) {
+        setError("User ID is not available");
+        setActivities([]);
+        return;
+      }
       try {
         const response = await fetch(
           `/api/recent-transactions?userId=${userId}`
@@ -42,9 +48,11 @@ export function RecentLoanActivity({ userId }: { userId: any }) {
         }
         const data = await response.json();
         setActivities(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching activities:", error);
         setActivities([]);
+        setError("Failed to fetch recent activities");
       }
     };
 

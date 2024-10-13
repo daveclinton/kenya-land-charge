@@ -17,7 +17,7 @@ import { Loader2, CheckCircle, DollarSign } from "lucide-react";
 interface Loan {
   id: number;
   userId: number;
-  userName: string;
+  userFullName: string;
   amount: number | string;
   repaymentPeriod: string;
   status: "PENDING" | "APPROVED" | "DISBURSED" | "REJECTED";
@@ -154,7 +154,7 @@ export default function LoanApprovalDashboard() {
                     <TableCell className="font-medium">{loan.id}</TableCell>
                     <TableCell>{loan.userId}</TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {loan.userName}
+                      {loan.userFullName}
                     </TableCell>
                     <TableCell>{formatAmount(loan.amount)}</TableCell>
                     <TableCell>{loan.repaymentPeriod}</TableCell>

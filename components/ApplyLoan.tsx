@@ -28,6 +28,7 @@ import {
   Check,
 } from "lucide-react";
 import { useFormStore } from "@/lib/store/useFormStore";
+import { useState } from "react";
 
 type FormData = {
   amount: number;
@@ -62,8 +63,10 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
   } = useForm<FormData>({
     defaultValues: formData,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("userId", userId?.toString() || "");
     formData.append("amount", data.amount.toString());
@@ -92,6 +95,8 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
       }
     } catch (error) {
       console.error("Error submitting loan application:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -136,6 +141,7 @@ export function ApplyLoanForm({ userId }: ApplyLoanFormProps) {
             Please fill out the following information to apply for a loan.
           </DialogDescription>
         </DialogHeader>
+        {isLoading && <Loader />}
         {!isSubmitted && (
           <div className="flex justify-between mb-6">
             {steps.map((s, index) => (
@@ -429,6 +435,22 @@ function ReviewItem({ label, value }: any) {
     <div className="flex flex-col sm:flex-row sm:justify-between">
       <span className="text-sky-600 text-sm">{label}:</span>
       <span className="text-sky-800 font-medium text-sm">{value}</span>
+    </div>
+  );
+}
+
+function Loader() {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-sky-500 mb-4"></div>
+        <div className="text-sky-700 text-xl font-semibold mb-2">
+          Processing Your Application
+        </div>
+        <div className="text-sky-600">
+          Please wait while we review your information...
+        </div>
+      </div>
     </div>
   );
 }

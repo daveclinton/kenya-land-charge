@@ -4,10 +4,10 @@ import { getSession } from "./lib/session";
 
 export async function middleware(request: NextRequest) {
   const session = await getSession();
-
   if (
-    !session.isLoggedIn &&
-    request.nextUrl.pathname.startsWith("/dashboard")
+    (!session || !session.isLoggedIn) &&
+    (request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/admin"))
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -16,5 +16,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

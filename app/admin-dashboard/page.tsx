@@ -1,11 +1,10 @@
-import { QuickApplySection } from "@/components/QuickApply";
-
 import React from "react";
+import LoanApprovalDashboard from "./LoanApproval";
 
 export default async function Dashboard() {
   return (
     <React.Fragment>
-      <QuickApplySection />
+      <LoanApprovalDashboard />
     </React.Fragment>
   );
 }

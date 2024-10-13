@@ -92,8 +92,6 @@ export const propertyDetails = pgTable("property_details", {
 });
 export type NewPropertyDetail = typeof propertyDetails.$inferSelect;
 
-// Documents
-
 export const documents = pgTable("documents", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ startWith: 5000 }),
   loanId: integer("loan_id")

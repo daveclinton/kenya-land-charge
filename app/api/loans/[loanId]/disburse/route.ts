@@ -19,7 +19,7 @@ export async function POST(
   try {
     const [updatedLoan] = await db
       .update(loans)
-      .set({ status: "APPROVED", approvedAt: new Date() })
+      .set({ status: "DISBURSED", approvedAt: new Date() })
       .where(eq(loans.id, Number(loanId)))
       .returning();
 

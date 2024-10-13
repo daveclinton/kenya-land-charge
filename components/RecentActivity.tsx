@@ -99,13 +99,16 @@ export function RecentLoanActivity({ userId }: { userId?: number }) {
         <CardTitle className="text-2xl font-bold text-sky-900">
           Recent Loan Activity
         </CardTitle>
-        <Button variant="ghost" className="text-sm font-medium text-sky-500">
+        <Button
+          variant="ghost"
+          className="text-sm hidden font-medium text-sky-500"
+        >
           View All
           <ChevronRight className="ml-1 h-4 w-4 text-sky-500" />
         </Button>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
+        <ScrollArea className="pr-4">
           {activities === null ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>

@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
       .orderBy(desc(loans.createdAt))
       .limit(5);
 
+    console.log("recent transactions", recentTransactions);
+
     return NextResponse.json(recentTransactions);
   } catch (error) {
     console.error("Error fetching recent transactions:", error);

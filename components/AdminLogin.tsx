@@ -107,10 +107,7 @@ export default function AdminForm() {
           <CardFooter className="flex flex-col space-y-4">
             <SubmitButton />
             <div className="text-sm text-center text-gray-500">
-              Don't have an account?{" "}
-              <Link href="/signup" className="text-sky-500 hover:underline">
-                Create an account
-              </Link>
+              This is page is for admin only
             </div>
           </CardFooter>
         </form>

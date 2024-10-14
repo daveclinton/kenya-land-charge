@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, EyeOffIcon, EyeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -41,6 +41,7 @@ const SignUpForm = () => {
   const [state, formAction] = useFormState(createUser, {});
   const router = useRouter();
   const [alert, setAlert] = useState({ type: "", message: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (formData: FormData) => {
     formAction(formData);
@@ -91,7 +92,28 @@ const SignUpForm = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input type="password" id="password" name="password" required />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  name="password"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-4 w-4 text-sky-500" />
+                  ) : (
+                    <EyeIcon className="h-4 w-4 text-sky-500" />
+                  )}
+                </Button>
+              </div>
               {state.errors?.password && (
                 <p className="text-sm text-destructive">
                   {state.errors.password}
